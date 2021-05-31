@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # rest framework
     'rest_framework',
+    'rest_framework.authtoken',
 
     'users.apps.UsersConfig',
 ]
@@ -106,6 +108,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# token authentication
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'users.authentication.ExpiringTokenAuthentication.ExpiringTokenAuthentication',
+    ],
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -144,3 +153,6 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = EMAIL_ID
 EMAIL_HOST_PASSWORD = EMAIL_APP_KEY
+
+# user activation email
+DAILY_ACTIVATION_LIMIT = 10

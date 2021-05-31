@@ -2,7 +2,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from .models import WriterApplication, WriterProfile, User, UserProfile, EmailActivation
-from .send_activation_email import send_activation_email
+from .send_email import send_activation_email
 
 
 @receiver(post_save, sender=WriterApplication)

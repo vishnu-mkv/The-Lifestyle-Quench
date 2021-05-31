@@ -1,7 +1,22 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from .models import User, WriterApplication, EmailActivation
+from .models import User, WriterApplication, EmailActivation, ForgotPasswordKey
+
+
+# the forms data is a query dict and it is immutable
+# use this method to change value
+def reset_to_initial(form, key, value):
+    form.data = form.data.copy()
+    form.data[key] = value
+
+
+def get_user_from_id(user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        return user
+    except User.DoesNotExist:
+        return None
 
 
 class UserAdminCreateForm(forms.ModelForm):
@@ -71,18 +86,14 @@ class WriterApplicationForm(forms.ModelForm):
 
     def clean_user(self):
 
-        # initial user can be got by id from self.initial['user]
-        try:
-            initial_user = User.objects.get(id=self.initial.get('user'))
-        except User.DoesNotExist:
-            initial_user = None
+        # initial user can be got by id from self.initial['user']
+        initial_user = get_user_from_id(self.initial.get('user'))
 
         user = self.cleaned_data.get('user')
 
         if initial_user is not None:
             if initial_user.email != user.email:
-                self.data = self.data.copy()
-                self.data['user'] = initial_user
+                reset_to_initial(self, 'user', initial_user)
                 raise forms.ValidationError("Cannot change user!")
 
         if initial_user is None and user.writer:
@@ -97,8 +108,7 @@ class WriterApplicationForm(forms.ModelForm):
 
         if initial_status is True and initial_status != status:
             # if user is approved as writer then the status cannot be changed by this form
-            self.data = self.data.copy()
-            self.data['approved'] = initial_status
+            reset_to_initial(self, 'approved', initial_status)
             raise forms.ValidationError("Cannot change writer status. Use demotion form")
 
         return status
@@ -111,9 +121,8 @@ class WriterApplicationForm(forms.ModelForm):
         init_bio = self.initial.get('bio')
 
         if user and user.writer:
-            self.data = self.data.copy()
-            self.data['bio'] = init_bio
-            self.data['writings'] = init_writings
+            reset_to_initial(self, 'bio', init_bio)
+            reset_to_initial(self, 'writings', init_writings)
             if bio != init_bio:
                 raise forms.ValidationError("Bio cannot be changed.")
             if writings != init_writings:
@@ -128,17 +137,13 @@ class EmailActivationForm(forms.ModelForm):
 
     def clean_user(self):
 
-        try:
-            init_user = User.objects.get(id=self.initial.get('user'))
-        except User.DoesNotExist:
-            init_user = None
+        init_user = get_user_from_id(self.initial.get('user'))
 
         user = self.cleaned_data.get('user')
 
         if init_user and init_user.email != user.email:
             # do not allow to change user associated with email activation
-            self.data = self.data.copy()
-            self.data['user'] = init_user
+            reset_to_initial(self, 'user', init_user)
             raise forms.ValidationError("Cannot change user.")
 
         if user and not init_user and user.active:
@@ -152,8 +157,36 @@ class EmailActivationForm(forms.ModelForm):
 
         if init_activated and init_activated != activated:
             # do not allow deactivate a user using this form
-            self.data = self.data.copy()
-            self.data['activated'] = init_activated
+            reset_to_initial(self, 'activated', init_activated)
             raise forms.ValidationError("Cannot change activated.")
 
         return activated
+
+
+class ForgotPasswordAdminForm(forms.ModelForm):
+    class Meta:
+        model = ForgotPasswordKey
+        fields = '__all__'
+
+    def clean_user(self):
+
+        init = self.initial.get('user')
+        user = self.cleaned_data.get('user')
+        if init:
+            init_user = get_user_from_id(init)
+
+            if init_user and init_user.email != user.email:
+                # do not allow to change user associated with forgot password key
+                reset_to_initial(self, 'user', init_user)
+                raise forms.ValidationError("Cannot change user.")
+
+        return user
+
+    def clean_validity(self):
+
+        # cannot change validity after password was changed
+        if 'validity' in self.changed_data and self.instance is not None and self.instance.password_changed is True:
+            reset_to_initial(self, 'validity', self.initial.get('validity'))
+            raise forms.ValidationError("Cannot change validity after password was changed using this key")
+
+        return self.cleaned_data.get('validity')

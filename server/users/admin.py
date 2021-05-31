@@ -2,10 +2,11 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 
-from .forms import UserAdminCreateForm, UserAdminChangeForm, WriterApplicationForm, EmailActivationForm
-from .models import User, WriterApplication, WriterProfile, UserProfile, EmailActivation
+from .forms import UserAdminCreateForm, UserAdminChangeForm, WriterApplicationForm, EmailActivationForm, \
+    ForgotPasswordAdminForm
+from .models import User, WriterApplication, WriterProfile, UserProfile, EmailActivation, ForgotPasswordKey
 # Register your models here.
-from .send_activation_email import send_activation_email
+from .send_email import send_activation_email, send_forgot_password_email
 
 
 class UserAdmin(BaseUserAdmin):
@@ -42,6 +43,8 @@ class WriterApplicationAdmin(admin.ModelAdmin):
 
     fields = ('user', 'bio', 'writings', 'approved', 'submitted_on', 'approved_by',)
 
+    list_display = ('user', 'approved', 'approved_by')
+
     def save_model(self, request, obj, form, change):
         if obj.approved:
             obj.approved_by = request.user
@@ -55,10 +58,27 @@ class EmailActivationAdmin(admin.ModelAdmin):
 
     fields = ('user', 'key', 'validity', 'email_sent', 'activated')
 
+    list_display = ('user', 'key', 'email_sent', 'activated')
+
     def save_model(self, request, obj, form, change):
-        print("user", obj.user, change)
         if not change:
             send_activation_email(obj.user)
+            return
+        obj.save()
+
+
+class ForgotPasswordAdmin(admin.ModelAdmin):
+    form = ForgotPasswordAdminForm
+
+    readonly_fields = ['email_sent', 'key', 'generated_on', 'password_changed']
+
+    fields = readonly_fields + ['user', 'validity']
+
+    list_display = ('user', 'key', 'email_sent', 'password_changed')
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            send_forgot_password_email(obj.user)
             return
         obj.save()
 
@@ -70,6 +90,7 @@ admin.site.register(WriterProfile)
 admin.site.register(WriterApplication, WriterApplicationAdmin)
 admin.site.register(UserProfile)
 admin.site.register(EmailActivation, EmailActivationAdmin)
+admin.site.register(ForgotPasswordKey, ForgotPasswordAdmin)
 
 # Removing Group Model from admin. We're not using it.
 admin.site.unregister(Group)

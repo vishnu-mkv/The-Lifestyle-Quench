@@ -2,7 +2,9 @@ import datetime
 
 from PIL import Image
 from django.contrib.auth.models import AbstractBaseUser
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from pytz import utc
 
 from .manager import UserManager
 
@@ -108,15 +110,17 @@ class EmailActivation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     key = models.CharField(unique=True, max_length=20)
     generated_on = models.DateTimeField(auto_now_add=True)
-    validity = models.IntegerField(default=7)
+    validity = models.PositiveBigIntegerField(default=7, validators=[
+        MaxValueValidator(100), MinValueValidator(1)
+    ])
     activated = models.BooleanField(default=False)
     email_sent = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.user.email} - Email Activation'
+        return f'{self.user.email} - {self.key}'
 
     def is_valid(self):
-        now = datetime.datetime.now()
+        now = datetime.datetime.now().replace(tzinfo=utc)
         max_validity = self.generated_on + datetime.timedelta(days=self.validity)
         print(now, max_validity, now <= max_validity)
         return now <= max_validity
@@ -138,10 +142,11 @@ class EmailActivation(models.Model):
 
 
 def validate_key_and_activate_user(key):
-    response = {'status': False, 'message': 'unknown error'}
+    response = {'status': False, 'message': 'unknown error', 'user': None}
 
     try:
         obj = EmailActivation.objects.get(key=key)
+        response['user'] = obj.user.email
         if obj.user.active:
             response['message'] = 'User already active'
             return response
@@ -151,9 +156,23 @@ def validate_key_and_activate_user(key):
         obj.activated = True
         obj.save()
         response['message'] = 'success'
-        response['status'] = True
+        response['status'] = 'Activated'
 
     except EmailActivation.DoesNotExist:
         response['message'] = 'Invalid Key'
 
     return response
+
+
+class ForgotPasswordKey(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    key = models.CharField(max_length=20, unique=True)
+    generated_on = models.DateTimeField(auto_now_add=True)
+    password_changed = models.BooleanField(default=False)
+    email_sent = models.BooleanField(default=False)
+    validity = models.PositiveIntegerField(default=7, validators=[
+        MaxValueValidator(100), MinValueValidator(1)
+    ])
+
+    def __str__(self):
+        return f'{self.user.get_short_name()} - Forgot password'
