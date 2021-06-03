@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     'users.apps.UsersConfig',
     'images.apps.ImagesConfig',
+    'posts.apps.PostsConfig',
 
     # clean up for images
     # always at last

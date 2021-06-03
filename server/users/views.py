@@ -251,7 +251,7 @@ def writer_application_list_review_view(request, approved="none"):
     # gives a list of not reviewed applications
     if approved.lower() == 'none':
         applications = WriterApplication.objects.filter(approved=None).order_by('-submitted_on')
-    elif approved.lower() == 'approved':
+    elif approved.lower() == 'accepted':
         applications = WriterApplication.objects.filter(approved=True).order_by('-submitted_on')
     elif approved.lower() == 'rejected':
         applications = WriterApplication.objects.filter(approved=False).order_by('-submitted_on')
@@ -270,6 +270,7 @@ def email_availability_view(request):
         email = request.data['email']
         validate_email(email)
         User.objects.get(email=email)
+        return Response({'email': email, 'availability': False, 'message': 'account already exists'})
     except KeyError:
         return Response({'email': 'This field is required'}, status.HTTP_400_BAD_REQUEST)
     except ValidationError:
@@ -281,8 +282,8 @@ def email_availability_view(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def writer_name_availability_view(request):
-    if not request.user.writer or not request.user.staff:
-        return Response({'error': 'Unauthorized'})
+    if not request.user.writer and not request.user.staff:
+        return Response({'error': 'Unauthorized'}, status.HTTP_401_UNAUTHORIZED)
 
     try:
         writer_name = request.data['writer_name']
@@ -299,7 +300,9 @@ def writer_name_availability_view(request):
             err['writer_name'] = err[writer_name] + msg if err['writer_name'] else msg
         if err['writer_name']:
             return Response(err, status.HTTP_400_BAD_REQUEST)
-        WriterProfile.objects.get(writer_name=writer_name)
+        instance = WriterProfile.objects.get(writer_name=writer_name)
+        if instance.user.email == request.user.email:
+            return Response({'writer_name': writer_name, 'availability': True})
         return Response({'writer_name': writer_name, 'availability': False})
     except KeyError:
         return Response({'writer_name': 'This field is required'}, status.HTTP_400_BAD_REQUEST)
