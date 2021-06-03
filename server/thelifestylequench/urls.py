@@ -19,9 +19,23 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path, include
 
+from users.views import writer_profile_view, writer_application_list_review_view, writer_application_review_view, \
+        writer_name_availability_view, email_availability_view
+
 urlpatterns = [
-                  path('admin/', admin.site.urls),
-                  path('users/', include('users.urls', namespace='users'))
+                      path('admin/', admin.site.urls),
+                      path('writer/<writer_name>/', writer_profile_view, name='writer-profile'),
+                      path('users/', include('users.urls', namespace='users')),
+                      path('upload/images/', include('images.urls', namespace='images')),
+                      path('check-availability/email/', email_availability_view, name='email-check'),
+                      path('check-availability/writer-name/', writer_name_availability_view, name='writer-name-check'),
+
+                      path('staff/applications/review/<approved>/', writer_application_list_review_view,
+                           name='writer-apply-review'
+                                '-filters'),
+                      path('staff/applications/review/', writer_application_list_review_view,
+                           name='writer-apply-not-reviewed'),
+                      path('staff/review/<w_id>/', writer_application_review_view, name='writer-apply-review'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += staticfiles_urlpatterns()

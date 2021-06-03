@@ -2,3 +2,4 @@ venv/
 thelifestylequench/secrets.py
 db.sqlite3
 users/migrations
+images/migrations

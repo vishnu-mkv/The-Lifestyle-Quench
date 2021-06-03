@@ -1,7 +1,7 @@
 import random
 import string
 
-from .models import EmailActivation, ForgotPasswordKey
+from .models import EmailActivation, ForgotPasswordKey, WriterProfile
 
 key_min_length = 12
 key_max_length = 20
@@ -27,6 +27,18 @@ def get_forgot_password_key():
     except ForgotPasswordKey.DoesNotExist:
         # else return key
         return key
+
+
+def get_unique_writer_name(user):
+    writer_name = f'{user.first_name.lower()}-{user.last_name.lower()}'
+
+    while True:
+        try:
+            WriterProfile.objects.get(writer_name=writer_name)
+            random_str = key_generator(1)
+            writer_name += random_str
+        except WriterProfile.DoesNotExist:
+            return writer_name
 
 
 def key_generator(size=6, chars=string.ascii_letters + string.digits):

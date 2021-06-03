@@ -3,6 +3,7 @@ from django.dispatch import receiver
 
 from .models import WriterApplication, WriterProfile, User, UserProfile, EmailActivation
 from .send_email import send_activation_email
+from .utils import get_unique_writer_name
 
 
 @receiver(post_save, sender=WriterApplication)
@@ -43,7 +44,7 @@ def post_save_user(sender, instance, created, **kwargs):
             profile = None
         if not profile:
             # implemented here for directly creating writer from admin panel without a form
-            WriterProfile.objects.create(user=instance).save()
+            WriterProfile.objects.create(user=instance, writer_name=get_unique_writer_name(instance)).save()
 
 
 @receiver(post_save, sender=EmailActivation)

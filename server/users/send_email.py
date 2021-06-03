@@ -20,7 +20,7 @@ def send_activation_email(user):
     # response = send_mail(subject, message, email_from, recipient_list)
 
     if response:
-        print(f'email sent to ${recipient_list}')
+        print(f'email sent to {recipient_list}')
         # email sent successfully
         instance.email_sent = True
         instance.save()
@@ -36,10 +36,12 @@ def send_forgot_password_email(user):
     subject = 'Forgot password'
     message = 'reset your password using this link'
     email_from = settings.EMAIL_HOST_USER
-    response = send_mail(subject, message, email_from, recipient_list)
+    # for debugging purpose
+    response = 1
+    # response = send_mail(subject, message, email_from, recipient_list)
 
     if response:
-        print(f'email sent to ${recipient_list}')
+        print(f'email sent to {recipient_list}')
         # email sent successfully
         instance.email_sent = True
         instance.save()

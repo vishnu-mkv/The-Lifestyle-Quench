@@ -44,6 +44,11 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
 
     'users.apps.UsersConfig',
+    'images.apps.ImagesConfig',
+
+    # clean up for images
+    # always at last
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -156,3 +161,19 @@ EMAIL_HOST_PASSWORD = EMAIL_APP_KEY
 
 # user activation email
 DAILY_ACTIVATION_LIMIT = 10
+DAILY_FORGOT_PASSWORD_EMAIL_LIMIT = 1
+
+# Authentication token validity in hours
+AUTH_TOKEN_VALIDITY = 1080
+
+# Cleaner config
+CLEANER_CONFIG = {
+    'ProfileImage': {
+        'include': {
+            'userprofile': None
+        },
+        'exclude': {
+            'image': 'default.jpg'
+        }
+    }
+}

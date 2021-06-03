@@ -1,12 +1,12 @@
 import datetime
+from pytz import utc
 
-from PIL import Image
 from django.contrib.auth.models import AbstractBaseUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from pytz import utc
 
 from .manager import UserManager
+from images.models import ProfileImage
 
 
 # Create your models here.
@@ -58,33 +58,30 @@ class User(AbstractBaseUser):
     def is_writer(self):
         return self.writer
 
+    def can_apply_for_writer(self):
+        if self.writer:
+            return False, "already a writer"
+        if self.writerapplication_set.filter(approved=None).count() > 0:
+            return False, "already a application is active"
+        return True, "Allowed"
+
 
 class WriterProfile(models.Model):
+    writer_name = models.CharField(max_length=20, unique=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
-    location = models.CharField(max_length=50, blank=True)
     birth_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
-        return self.user.get_full_name() + " - Writer Profile"
+        return self.writer_name
 
 
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    profile_pic = models.ImageField(default='default.jpg', upload_to='profile_pics')
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_pic = models.ForeignKey(ProfileImage, on_delete=models.DO_NOTHING, null=True, default=1)
 
     def __str__(self):
         return f'{self.user.get_full_name()} - Profile'
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
-        # resizing image to 320*320
-        img = Image.open(self.profile_pic.path)
-        if img.height > 320 or img.width > 320:
-            output_size = (320, 320)
-            img.thumbnail(output_size)
-            img.save(self.profile_pic.path)
 
 
 class WriterApplication(models.Model):
@@ -106,6 +103,12 @@ class WriterApplication(models.Model):
         return self.user.get_full_name() + " - Writer Application"
 
 
+def check_validity(obj):
+    now = datetime.datetime.now().replace(tzinfo=utc)
+    max_validity = obj.generated_on + datetime.timedelta(days=obj.validity)
+    return now <= max_validity
+
+
 class EmailActivation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     key = models.CharField(unique=True, max_length=20)
@@ -120,10 +123,7 @@ class EmailActivation(models.Model):
         return f'{self.user.email} - {self.key}'
 
     def is_valid(self):
-        now = datetime.datetime.now().replace(tzinfo=utc)
-        max_validity = self.generated_on + datetime.timedelta(days=self.validity)
-        print(now, max_validity, now <= max_validity)
-        return now <= max_validity
+        return check_validity(self)
 
     def activate_user(self):
         if self.user.active:
@@ -176,3 +176,10 @@ class ForgotPasswordKey(models.Model):
 
     def __str__(self):
         return f'{self.user.get_short_name()} - Forgot password'
+
+    def is_valid(self):
+        return check_validity(self) and not self.password_changed
+
+    def mark_as_used(self):
+        self.password_changed = True
+        return self.save()
