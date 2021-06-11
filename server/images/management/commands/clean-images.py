@@ -37,8 +37,8 @@ class Command(BaseCommand):
             found = qs.count()
             total, res = qs.delete()
 
-            self.stdout.write("\nSUMMARY")
+            self.stdout.write("Summary - model " + model_name)
             for model, value in res.items():
                 self.stdout.write("Deleted in " + model + ": " + str(value))
             self.stdout.write("Total Found: " + str(found))
-            self.stdout.write("Total deleted: " + str(total))
+            self.stdout.write("Total deleted: " + str(total) + "\n\n")

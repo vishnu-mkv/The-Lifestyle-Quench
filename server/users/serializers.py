@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from images.models import ProfileImage
+from utils.ImageUrlValidator import validate_image_url
 
 from .models import User, ForgotPasswordKey, UserProfile, WriterProfile, WriterApplication
 
@@ -101,7 +102,7 @@ class EditProfileSerializer(serializers.Serializer):
     profile_pic = serializers.URLField(required=False)
 
     def __init__(self, **kwargs):
-        self.profile_image_instance = None
+        self.profile_image_instance = ProfileImage.objects.get(id=1)
         super().__init__(**kwargs)
 
     def update(self, instance, validated_data):
@@ -125,29 +126,11 @@ class EditProfileSerializer(serializers.Serializer):
     def create(self, validated_data):
         pass
 
-    def build_image_url(self, image):
-        request = self.context['request']
-        return request.build_absolute_uri(image.image.url)
-
     def validate_profile_pic(self, profile_pic):
-
-        if not profile_pic:
-            return profile_pic
-
-        directory = ProfileImage._meta.get_field('image').upload_to
-        image_name = profile_pic.split('/')[-1]
-
-        if profile_pic == self.build_image_url(ProfileImage.objects.get(image='default.jpg')):
-            return profile_pic
-
-        try:
-            image = ProfileImage.objects.get(image=f'{directory}/{image_name}')
-            if profile_pic != self.build_image_url(image):
-                raise serializers.ValidationError("Invalid uri.")
-            self.profile_image_instance = image
-            return profile_pic
-        except ProfileImage.DoesNotExist:
-            raise serializers.ValidationError("Invalid url")
+        response = validate_image_url(url=profile_pic, Model=ProfileImage,
+                                      request=self.context['request'])
+        self.profile_image_instance = response
+        return profile_pic
 
     def validate_email(self, email):
 

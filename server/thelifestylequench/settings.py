@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     # clean up for images
     # always at last
     'django_cleanup.apps.CleanupConfig',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -172,6 +173,22 @@ CLEANER_CONFIG = {
     'ProfileImage': {
         'include': {
             'userprofile': None
+        },
+        'exclude': {
+            'image': 'default.jpg'
+        }
+    },
+    'PostThumbnail': {
+        'include': {
+            'post': None
+        },
+        'exclude': {
+            'image': 'default.jpg'
+        }
+    },
+    'PostImage': {
+        'include': {
+            'post': None
         },
         'exclude': {
             'image': 'default.jpg'

@@ -4,7 +4,6 @@ from django.db import models
 
 # Create your models here.
 
-
 class ProfileImage(models.Model):
     image = models.ImageField(unique=True, upload_to='profile_pics', default='default.jpg')
 
@@ -22,3 +21,21 @@ class ProfileImage(models.Model):
 
     def __str__(self):
         return f'{self.image.name}'
+
+
+class PostImage(models.Model):
+    image = models.ImageField(unique=True, upload_to='post-images')
+    post = models.ForeignKey('posts.Post', on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        postName = "None"
+        if self.post:
+            postName = self.post.slug
+        return f'{self.image} - {postName}'
+
+
+class PostThumbnail(models.Model):
+    image = models.ImageField(unique=True, upload_to='thumbnails', default='default.jpg')
+
+    def __str__(self):
+        return f'{self.image.name} - {self.post_set.count()}'
