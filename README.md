@@ -1,4 +1,4 @@
-# The Lifestyle Quench
+# Curiosity
 
 a blog application with django backend and angular frontend.
 
