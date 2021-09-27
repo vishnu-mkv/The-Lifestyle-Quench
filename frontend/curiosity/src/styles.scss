@@ -1,1 +1,80 @@
 /* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+:root {
+    --greene: #50c878;
+    --dark-green: #19813c;
+    --blacky: #111013;
+    --whitey: #fbf5f3;
+    --grey: #17161a;
+    --error: #cc4040;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background-color: var(--blacky);
+    color: var(--whitey);
+    font-family: "Poppins", sans-serif;
+    font-size: 15px;
+    overflow-x: hidden;
+}
+
+.width-control {
+    max-width: 1200px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+a {
+    cursor: pointer;
+    color: var(--whitey);
+    text-decoration: none;
+}
+
+.form {
+
+    .form-group {
+        padding: 1px;
+        margin: 0.5em 0;
+    }
+
+    label {
+        display: block;
+        margin: 0.5em 0;
+    }
+
+    input {
+        padding: 0.4em;
+        border-radius: 0.5em;
+        border: none;
+        font-family: "Poppins", sans-serif;
+        max-width: 300px;
+        width: 100%;
+    }
+
+    input:focus {
+        outline: none;
+    }
+
+    .invalid-msg {
+        margin: 0;
+        padding: 0.25em;
+        color: var(--error);
+    }
+
+    button[type="submit"] {
+        cursor: pointer;
+        padding: 0.5em 1em;
+        border-radius: 0.3em;
+        font-family: "Poppins", sans-serif;
+        margin: 1em auto 1em 0;
+        background-color: var(--dark-green);
+        color: var(--whitey);
+        border: none;
+    }
+}
+

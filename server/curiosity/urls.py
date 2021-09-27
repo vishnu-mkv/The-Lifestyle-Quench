@@ -25,7 +25,7 @@ from users.views import writer_profile_view, writer_application_list_review_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('writer/<writer_name>/', writer_profile_view, name='writer-profile'),
-    path('users/', include('users.urls', namespace='users')),
+    path('api/users/', include('users.urls', namespace='users')),
     path('posts/', include('posts.urls', namespace='posts')),
     path('upload/images/', include('images.urls', namespace='images')),
     path('check-availability/email/', email_availability_view, name='email-check'),

@@ -1,0 +1,36 @@
+<div id="nav-container">
+    <div class="width-control" id="navbar">
+        <div id="left">
+            <img (click)="toggleMenu()" [ngClass]="(showNav | async)?'menu-active':''" alt="" id="menu" src="">
+            <h2>Curiosity</h2>
+        </div>
+        <div [ngClass]="(showNav | async )? 'show-menu':'hide-menu'" id="right">
+            <ul>
+                <li><a routerLink="/">Home</a></li>
+                <li><a routerLink="/posts">Posts</a></li>
+                <li><a routerLink="/about">About</a></li>
+            </ul>
+            <div *ngIf="!(isLoggedIn | async) else accview" class="acc-btns">
+                <div class="btn-light-mobile"><a routerLink="/login">Login</a></div>
+                <div class="btn-light" id="register"><a routerLink="/register">Register</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #accview>
+    <div id="acc-view">
+        <!--        <span>{{name}}</span>-->
+        <img (click)="toggleDropDown()" [src]="picUrl" alt="profile-pic" id="profile-pic"/>
+        <div [ngClass]="(showDropdown)?'dropdown-show':''" class="dropdown">
+            <a routerLink="/register">Profile</a>
+            <a (click)="logout()">Logout</a>
+        </div>
+    </div>
+    <div class="acc-btns" id="acc-view-mobile">
+        <div class="btn-light"><a routerLink="/profile">Profile</a></div>
+        <div class="btn-light"><a (click)="logout()">Logout</a></div>
+    </div>
+</ng-template>
+
+

@@ -1,0 +1,18 @@
+#login {
+    margin: auto;
+    align-content: center;
+    padding: 1em;
+
+    .error-msg {
+        color: var(--error);
+    }
+
+
+    h2 {
+        margin: 1em 0 0;
+    }
+
+    p > a {
+        text-decoration: underline;
+    }
+}

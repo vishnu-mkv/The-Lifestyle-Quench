@@ -1,9 +1,50 @@
 from rest_framework import serializers
 
+from django.contrib.auth import authenticate
+from django.utils.translation import gettext_lazy as _
+
 from images.models import ProfileImage
 from utils.ImageUrlValidator import validate_image_url
 
 from .models import User, ForgotPasswordKey, UserProfile, WriterProfile, WriterApplication
+
+
+class AuthTokenSerializer(serializers.Serializer):
+    email = serializers.CharField(
+        label=_("Email"),
+        write_only=True
+    )
+    password = serializers.CharField(
+        label=_("Password"),
+        style={'input_type': 'password'},
+        trim_whitespace=False,
+        write_only=True
+    )
+    token = serializers.CharField(
+        label=_("Token"),
+        read_only=True
+    )
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+        password = attrs.get('password')
+
+        if email and password:
+            user = authenticate(request=self.context.get('request'),
+                                username=email, password=password)
+
+            # The authenticate call simply returns None for is_active=False
+            # users. (Assuming the default ModelBackend authentication
+            # backend.)
+            if not user:
+                msg = _('Unable to log in with provided credentials.')
+                raise serializers.ValidationError(msg, code='authorization')
+        else:
+            msg = _('Must include "username" and "password".')
+            raise serializers.ValidationError(msg, code='authorization')
+
+        attrs['user'] = user
+        return attrs
 
 
 class RegisterUserSerializer(serializers.ModelSerializer):
@@ -13,7 +54,8 @@ class RegisterUserSerializer(serializers.ModelSerializer):
 
 
 class BasePasswordChangeSerializer(serializers.Serializer):
-    new_password = serializers.CharField(required=True, max_length=20, min_length=8)
+    new_password = serializers.CharField(
+        required=True, max_length=20, min_length=8)
 
     def __init__(self, **kwargs):
         self.user = None
@@ -48,12 +90,14 @@ class ChangePasswordSerializer(BasePasswordChangeSerializer):
         if not self.user:
             return password
         if not self.user.check_password(password):
-            raise serializers.ValidationError("Email and passwords do not match")
+            raise serializers.ValidationError(
+                "Email and passwords do not match")
         return password
 
     def validate(self, data):
         if data.get('password') == data.get('new_password'):
-            raise serializers.ValidationError("New password is same as password")
+            raise serializers.ValidationError(
+                "New password is same as password")
         return data
 
 
@@ -68,7 +112,8 @@ class ForgotPasswordChangeSerializer(BasePasswordChangeSerializer):
         try:
             instance = ForgotPasswordKey.objects.get(key=key)
             if not instance.is_valid():
-                raise serializers.ValidationError("Key expired or was already used")
+                raise serializers.ValidationError(
+                    "Key expired or was already used")
             self.user = instance.user
             self.key = instance
             return key
@@ -84,16 +129,20 @@ class ForgotPasswordChangeSerializer(BasePasswordChangeSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        exclude = ['id', 'password', 'admin', 'last_login']
+        exclude = ['id', 'password', 'last_login']
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
-    profile_pic = serializers.ImageField(source='profile_pic.image', use_url=True)
+    profile_pic = serializers.SerializerMethodField()
 
     class Meta:
         model = UserProfile
         fields = ['user', 'profile_pic']
+
+    def get_profile_pic(self, profile):
+        request = self.context.get('request')
+        return request.build_absolute_uri(profile.profile_pic.image.url)
 
 
 class EditProfileSerializer(serializers.Serializer):
@@ -175,13 +224,15 @@ class WriterApplicationSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        obj = WriterApplication.objects.create(**validated_data, user=self.context['request'].user)
+        obj = WriterApplication.objects.create(
+            **validated_data, user=self.context['request'].user)
         obj.save()
         return obj
 
 
 class WriterApplicationReviewSerializer(serializers.ModelSerializer):
-    approved_by = serializers.CharField(source="approved_by.get_full_name", read_only=True)
+    approved_by = serializers.CharField(
+        source="approved_by.get_full_name", read_only=True)
     user = serializers.CharField(source="user.get_full_name", read_only=True)
 
     class Meta:

@@ -10,29 +10,32 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 
 from .models import User, EmailActivation, validate_key_and_activate_user, ForgotPasswordKey, WriterProfile, \
     WriterApplication
 from .send_email import send_activation_email, send_forgot_password_email
 from .serializers import RegisterUserSerializer, ChangePasswordSerializer, ForgotPasswordChangeSerializer, \
     UserProfileSerializer, EditProfileSerializer, WriterProfileSerializer, WriterApplicationSerializer, \
-    WriterApplicationReviewSerializer
+    WriterApplicationReviewSerializer, AuthTokenSerializer
 
 
 class ObtainExpiringAuthToken(ObtainAuthToken):
     def post(self, request, **kwargs):
-        serializer = self.serializer_class(data=request.data)
+        serializer = AuthTokenSerializer(data=request.data)
         if serializer.is_valid():
-            token, created = Token.objects.get_or_create(user=serializer.validated_data['user'])
+            token, created = Token.objects.get_or_create(
+                user=serializer.validated_data['user'])
 
             utc_now = datetime.datetime.utcnow().replace(tzinfo=pytz.UTC)
             if not created and token.created < utc_now - datetime.timedelta(hours=-1):
                 token.delete()
-                token = Token.objects.create(user=serializer.validated_data['user'])
+                token = Token.objects.create(
+                    user=serializer.validated_data['user'])
                 token.created = datetime.datetime.utcnow().replace(tzinfo=pytz.UTC)
                 token.save()
 
-            return Response({'token': token.key})
+            return Response({'token': token.key, 'expiresIn': settings.AUTH_TOKEN_VALIDITY*60*60})
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -72,8 +75,10 @@ def resend_activation_view(request):
         if user.active:
             return Response({'email': 'user is already active'}, status=status.HTTP_400_BAD_REQUEST)
 
-        time_threshold = datetime.datetime.now(tz=pytz.utc) - datetime.timedelta(hours=24)
-        qs = EmailActivation.objects.filter(user=user, generated_on__gt=time_threshold, activated=False)
+        time_threshold = datetime.datetime.now(
+            tz=pytz.utc) - datetime.timedelta(hours=24)
+        qs = EmailActivation.objects.filter(
+            user=user, generated_on__gt=time_threshold, activated=False)
 
         # Limit number of requests per day
         if qs.count() >= settings.DAILY_ACTIVATION_LIMIT:
@@ -128,8 +133,10 @@ def forgot_password_send_email_view(request):
     try:
         user = User.objects.get(email=email)
 
-        time_threshold = datetime.datetime.now(tz=pytz.utc) - datetime.timedelta(hours=24)
-        qs = ForgotPasswordKey.objects.filter(user=user, generated_on__gt=time_threshold, password_changed=False)
+        time_threshold = datetime.datetime.now(
+            tz=pytz.utc) - datetime.timedelta(hours=24)
+        qs = ForgotPasswordKey.objects.filter(
+            user=user, generated_on__gt=time_threshold, password_changed=False)
 
         # Limit number of requests per day
         if qs.count() >= settings.DAILY_FORGOT_PASSWORD_EMAIL_LIMIT:
@@ -147,10 +154,12 @@ def forgot_password_send_email_view(request):
 def profile_view(request):
     if request.method == "GET":
         profile = request.user.userprofile
-        serializer = UserProfileSerializer(instance=profile, context={'request': request})
+        serializer = UserProfileSerializer(
+            instance=profile, context={'request': request})
         return Response(serializer.data)
     if request.method == "PATCH":
-        serializer = EditProfileSerializer(instance=request.user, data=request.data, context={'request': request})
+        serializer = EditProfileSerializer(
+            instance=request.user, data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.validated_data)
@@ -172,11 +181,13 @@ def writer_profile_view(request, writer_name):
             if request.user.email != profile.user.email:
                 return Response({"message": "Unauthorized"}, status=status.HTTP_403_FORBIDDEN)
 
-            serializer = WriterProfileSerializer(instance=profile, data=request.data)
+            serializer = WriterProfileSerializer(
+                instance=profile, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 res = serializer.validated_data
-                res['url'] = request.build_absolute_uri(f'../{res["writer_name"]}')
+                res['url'] = request.build_absolute_uri(
+                    f'../{res["writer_name"]}')
                 return Response(res)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -191,7 +202,8 @@ def writer_application_view(request):
         can_apply, message = request.user.can_apply_for_writer()
 
         if can_apply:
-            serializer = WriterApplicationSerializer(data=request.data, context={'request': request})
+            serializer = WriterApplicationSerializer(
+                data=request.data, context={'request': request})
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
@@ -208,7 +220,8 @@ def writer_application_view(request):
 
         if qs.count == 0:
             return Response({'message': "You don't have any applications active."}, status.HTTP_403_FORBIDDEN)
-        serializer = WriterApplicationSerializer(instance=qs.first(), data=request.data)
+        serializer = WriterApplicationSerializer(
+            instance=qs.first(), data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -216,7 +229,8 @@ def writer_application_view(request):
 
     if request.method == "GET":
         user = request.user
-        qs = WriterApplication.objects.filter(user=user).order_by('-submitted_on')
+        qs = WriterApplication.objects.filter(
+            user=user).order_by('-submitted_on')
         serializer = WriterApplicationSerializer(instance=qs, many=True)
         return Response(serializer.data)
 
@@ -229,8 +243,10 @@ def writer_application_review_view(request, w_id):
 
         # gives history of applications of user
         if request.method == 'GET':
-            applications = WriterApplication.objects.filter(user=application.user).order_by('-submitted_on')
-            serializer = WriterApplicationReviewSerializer(instance=applications, many=True)
+            applications = WriterApplication.objects.filter(
+                user=application.user).order_by('-submitted_on')
+            serializer = WriterApplicationReviewSerializer(
+                instance=applications, many=True)
             return Response(serializer.data)
 
         if request.method == 'PATCH':
@@ -250,16 +266,20 @@ def writer_application_review_view(request, w_id):
 def writer_application_list_review_view(request, approved="none"):
     # gives a list of not reviewed applications
     if approved.lower() == 'none':
-        applications = WriterApplication.objects.filter(approved=None).order_by('-submitted_on')
+        applications = WriterApplication.objects.filter(
+            approved=None).order_by('-submitted_on')
     elif approved.lower() == 'accepted':
-        applications = WriterApplication.objects.filter(approved=True).order_by('-submitted_on')
+        applications = WriterApplication.objects.filter(
+            approved=True).order_by('-submitted_on')
     elif approved.lower() == 'rejected':
-        applications = WriterApplication.objects.filter(approved=False).order_by('-submitted_on')
+        applications = WriterApplication.objects.filter(
+            approved=False).order_by('-submitted_on')
     elif approved.lower() == 'all':
         applications = WriterApplication.objects.all().order_by('-submitted_on')
     else:
         return Response({'error': 'url does not exist'}, status.HTTP_404_NOT_FOUND)
-    serializer = WriterApplicationReviewSerializer(instance=applications, many=True)
+    serializer = WriterApplicationReviewSerializer(
+        instance=applications, many=True)
     return Response(serializer.data)
 
 
@@ -291,13 +311,16 @@ def writer_name_availability_view(request):
         err = {'writer_name': None}
         if not copy.isalnum():
             msg = 'Can only contain alphabets, numbers and hyphen(-).'
-            err['writer_name'] = err[writer_name] + msg if err['writer_name'] else msg
+            err['writer_name'] = err[writer_name] + \
+                msg if err['writer_name'] else msg
         if not len(writer_name) > 5:
             msg = 'Minimum length is 5'
-            err['writer_name'] = err[writer_name] + msg if err['writer_name'] else msg
+            err['writer_name'] = err[writer_name] + \
+                msg if err['writer_name'] else msg
         if not writer_name[0].isalpha():
             msg = 'Should start with alphabets'
-            err['writer_name'] = err[writer_name] + msg if err['writer_name'] else msg
+            err['writer_name'] = err[writer_name] + \
+                msg if err['writer_name'] else msg
         if err['writer_name']:
             return Response(err, status.HTTP_400_BAD_REQUEST)
         instance = WriterProfile.objects.get(writer_name=writer_name)

@@ -1,10 +1,24 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {NavigationEnd, Router} from "@angular/router";
+import {NavService} from "./nav.service";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'curiosity';
+    title = 'curiosity';
+
+    constructor(private router: Router, private nav: NavService) {
+
+        router.events.subscribe({
+            next: event => {
+                if (event instanceof NavigationEnd) {
+                    this.nav.showNav(false);
+                    console.log("Close");
+                }
+            }
+        })
+    }
 }
