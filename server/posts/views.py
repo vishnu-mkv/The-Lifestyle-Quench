@@ -9,8 +9,18 @@ from rest_framework.viewsets import ViewSet
 
 from .models import Post, Submission
 # Create your views here.
-from .serializers import PostSerializer, SubmissionSerializer
+from .serializers import PostSerializer, SubmissionSerializer, PostSummarySerializer
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def writerPostListView(request):
+
+    if not request.user.writer:
+        return Response({"message": "Not a writer"}, status.HTTP_403_FORBIDDEN)
+
+    queryset = Post.objects.filter(writer=request.user).order_by('-last_edited')
+    serializer = PostSummarySerializer(queryset, many=True, context={'request': request})
+    return Response(serializer.data)
 
 class PostViewSet(ViewSet):
 
@@ -56,16 +66,16 @@ class PostViewSet(ViewSet):
     def update(self, request, pk):
 
         if request.user.is_anonymous:
-            return Response({"user": "Authentication required"}, status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+            return Response({"message": "User authentication required"}, status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
 
         if not request.user.writer:
-            return Response({request.user.get_full_name(): 'Unauthorized'}, status.HTTP_401_UNAUTHORIZED)
+            return Response({'message': request.user.get_full_name()+' Unauthorized'}, status.HTTP_401_UNAUTHORIZED)
 
         queryset = Post.objects.all()
         post = get_object_or_404(queryset, slug=pk)
 
         if not request.user.email == post.writer.email and not request.user.admin:
-            return Response({request.user.get_full_name(): "unauthorized"}, status.HTTP_401_UNAUTHORIZED)
+            return Response({'message': request.user.get_full_name()+' Unauthorized'}, status.HTTP_401_UNAUTHORIZED)
 
         if post.status == 'P' and not request.user.admin:
             return Response({"message": "Not allowed. Contact admin"}, status.HTTP_406_NOT_ACCEPTABLE)
@@ -82,7 +92,7 @@ class PostViewSet(ViewSet):
     def destroy(self, request, pk):
 
         if request.user.is_anonymous:
-            return Response({"user": "Authentication required"}, status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+            return Response({"user": "Authentication required"}, status.HTTP_401_UNAUTHORIZED)
 
         if not request.user.writer and not request.user.admin:
             return Response({request.user.get_full_name(): 'Unauthorized'}, status.HTTP_401_UNAUTHORIZED)
@@ -96,61 +106,57 @@ class PostViewSet(ViewSet):
                 return Response({request.user.get_full_name(): 'Unauthorized'}, status.HTTP_401_UNAUTHORIZED)
             else:
                 if post.status == 'P':
-                    return Response({'post': post.slug, 'delete': False,
+                    return Response({'slug': post.slug, 'delete': False,
                                      'message': "Post published. contact admin to delete"},
                                     status.HTTP_406_NOT_ACCEPTABLE)
 
         slug = post.slug
         post.delete()
-        return Response({'post': slug, 'delete': True})
+        return Response({'slug': slug, 'delete': True, 'message': 'Post has been deleted.'})
 
 
-@api_view(['POST', 'GET'])
+
+@api_view(['POST', 'DELETE'])
 @permission_classes([IsAuthenticated])
-def submissions_view(request, slug):
+def postSubmitView(request, slug):
+
+    post = None
     try:
         post = Post.objects.get(slug=slug)
     except Post.DoesNotExist:
-        return Response({slug: "Not found"}, status.HTTP_404_NOT_FOUND)
+        return Response({"message": "Post not found"}, status.HTTP_404_NOT_FOUND)
 
-    if not request.user.email == post.writer.email and not request.user.staff:
-        return Response({request.user.get_full_name(): 'Unauthorized'}, status.HTTP_401_UNAUTHORIZED)
+    if post.status == 'P':
+        return Response({'status': 'P', "message": "Post has been already published"}, status.HTTP_400_BAD_REQUEST)
 
-    if request.method == 'GET':
-        qs = Submission.objects.filter(post=post).order_by('-date_submitted')
-        serializer = SubmissionSerializer(qs, many=True)
-        return Response(serializer.data)
+    if (not request.user.writer) or (post.writer != request.user):
+        print(post.writer.email, request.user.email)
+        return Response({"message": "Forbidden"}, status.HTTP_403_FORBIDDEN)
 
     if request.method == 'POST':
+        if not request.data['submit']:
+            return Response({'submit' : 'This field is required'}, status.HTTP_400_BAD_REQUEST)
 
-        if not request.user.email == post.writer.email:
-            return Response({request.user.get_full_name(): 'Unauthorized'}, status.HTTP_401_UNAUTHORIZED)
+        if Submission.objects.filter(post=post, approved=None):
+            return Response({'status': 'S', 'message': 'Post has been already submitted'})
 
-        if post.status == 'P':
-            return Response({post.slug: 'Post has been already published'})
+        if Submission.objects.filter(post=post, approved=False).count() >= 2:
+            return Response({'status': 'R', 'message': 'Rejected'}, status.HTTP_400_BAD_REQUEST)
 
-        if request.data.get('submit') is None:
-            return Response({'submit': "This field is required"}, status.HTTP_400_BAD_REQUEST)
+        post.status = 'S'
+        post.save()
+        Submission.objects.create(post=post)
+        return Response({'status': 'S', 'message': 'Post has been submitted'})
 
-        submit = request.data['submit']
+    if request.method == 'DELETE':
+        submissions = Submission.objects.filter(post = post, approved=None)
 
-        if submit is not False and submit is not True:
-            return Response({'submit': "specify 'true' or 'false'"}, status.HTTP_400_BAD_REQUEST)
+        post.status = 'D'
+        post.save()
+        for sub in submissions:
+            sub.delete()
 
-        if post.status == 'S' and submit is True:
-            return Response({post.slug: 'Post has been already submitted'})
+        return Response({'status': 'D', 'message': 'Post submission has been deleted.'})
 
-        elif post.status == 'S' and submit is False:
-            qs = Submission.objects.filter(post=post, approved=None)
-            qs.delete()
-            post.status = 'D'
-            post.save()
-            return Response({post.slug: "Post un-submitted"})
 
-        elif post.status == 'D' and submit is True:
-            instance = Submission.objects.create(post=post)
-            post.status = 'S'
-            post.save()
-            serializer = SubmissionSerializer(instance)
-            return Response(serializer.data)
-        return Response({'ok': True})
+

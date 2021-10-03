@@ -1,0 +1,10 @@
+#register {
+    padding: 1em;
+    margin-top: 3em;
+}
+
+@media screen and (max-width: 500px) {
+    #register {
+        margin-top: 0;
+    }
+}

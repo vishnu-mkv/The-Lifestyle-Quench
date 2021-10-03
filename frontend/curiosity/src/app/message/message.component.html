@@ -1,0 +1,5 @@
+<div id="messages">
+    <div *ngFor="let message of messages | async" [class]="'message '+message.classType">
+        {{message.text}}
+    </div>
+</div>

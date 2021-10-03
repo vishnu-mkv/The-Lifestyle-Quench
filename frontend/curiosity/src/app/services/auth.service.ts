@@ -1,9 +1,9 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {apiURL} from "../environments/environment";
+import {apiURL} from "../../environments/environment";
 import {BehaviorSubject, Observable, ReplaySubject, throwError} from "rxjs";
 import {share, tap} from "rxjs/operators";
-import {Profile} from "./interfaces";
+import {Profile, userRegistration, writerProfile} from "../interfaces";
 import {Router} from "@angular/router";
 
 interface UserToken {
@@ -11,6 +11,27 @@ interface UserToken {
     expiresIn: number
 }
 
+interface emailAvailable {
+    email: string,
+    availability: boolean,
+    message?: string
+}
+
+interface registerReply {
+    success: boolean,
+    email: string,
+    errors?: any
+}
+
+interface keyActivate {
+    user: string,
+    status: boolean,
+    message: string
+}
+
+interface activationReply {
+    message: string
+}
 
 @Injectable({
     providedIn: 'root'
@@ -21,6 +42,8 @@ export class AuthService {
     source = this.loginSubject.asObservable();
     profileSubject = new ReplaySubject<Profile>();
     profileSource = this.profileSubject.asObservable();
+    writerSubject = new ReplaySubject<writerProfile>();
+    writerSource = this.writerSubject.asObservable();
 
 
     constructor(private http: HttpClient, private router: Router) {
@@ -72,10 +95,11 @@ export class AuthService {
     }
 
     fetchProfile() {
-        this.http.get<Profile>(apiURL + 'api/users/profile').subscribe({
+        this.http.get<Profile>(apiURL + 'api/users/profile/').subscribe({
             next: data => {
                 localStorage.setItem('profile', JSON.stringify(data));
                 this.profileSubject.next(data as Profile);
+                if (data.user.writer) this.fetchWriterProfile();
             }
         });
     }
@@ -84,5 +108,34 @@ export class AuthService {
         return this.profileSource.pipe(share());
     }
 
+    checkEmailAvailability(email: string) {
+        return this.http.post<emailAvailable>(apiURL + 'check-availability/email/', {email});
+    }
+
+    register(user: userRegistration) {
+        return this.http.post<registerReply>(apiURL + 'api/users/register/', user);
+    }
+
+    activateUser(key: string) {
+        return this.http.post<keyActivate>(apiURL + 'api/users/activate/', {key});
+    }
+
+    sendActivation(email: string) {
+        return this.http.post<activationReply>(apiURL + 'api/users/resend-activation/', {email});
+    }
+
+    getWriterProfile() {
+        return this.writerSource.pipe(share());
+    }
+
+    private fetchWriterProfile() {
+        return this.http.get<writerProfile>(apiURL + 'api/users/writer-profile/').subscribe(
+            data => {
+                localStorage.setItem('writer', JSON.stringify(data));
+                this.writerSubject.next(data)
+            },
+            err => console.log(err)
+        );
+    }
 }
 

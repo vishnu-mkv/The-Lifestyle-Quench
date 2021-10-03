@@ -26,6 +26,19 @@ class ReadWriteSerializerMethodField(serializers.SerializerMethodField):
     def to_internal_value(self, data):
         return {self.field_name: data}
 
+class PostSummarySerializer(serializers.ModelSerializer):
+
+    thumbnail = serializers.SerializerMethodField()
+    writer = serializers.CharField(source='writer.get_full_name', read_only=True)
+
+    class Meta:
+        model = Post
+        exclude = ['content']
+
+    def get_thumbnail(self, obj):
+            request = self.context['request']
+            return request.build_absolute_uri(obj.thumbnail.image.url)
+
 
 class PostSerializer(serializers.ModelSerializer):
     thumbnail = ReadWriteSerializerMethodField('get_thumbnail', required=False)
@@ -34,7 +47,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        exclude = ['id']
+        fields = '__all__'
         extra_kwargs = {
             'last_edited': {
                 'read_only': True

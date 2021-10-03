@@ -1,19 +1,56 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '~@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$curiosity-primary: mat.define-palette(mat.$indigo-palette);
+$curiosity-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$curiosity-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$curiosity-theme: mat.define-light-theme((
+    color: (
+        primary: $curiosity-primary,
+        accent: $curiosity-accent,
+        warn: $curiosity-warn,
+    )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($curiosity-theme);
+
 /* You can add global styles to this file, and also import other style files */
-@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
 :root {
     --greene: #50c878;
-    --dark-green: #19813c;
+    --dark-green: #0f6e32;
     --blacky: #111013;
     --whitey: #fbf5f3;
     --grey: #17161a;
-    --error: #cc4040;
+    --error: #ef7d7d;
+    --dark-white: #aba9a9;
+    --light-gray: rgba(44, 44, 45, 0.38);
+    --info: #145873;
 }
 
 html,
 body {
-    height: 100%;
-    width: 100%;
+    height: 100vh;
+    width: 100vw;
     padding: 0;
     margin: 0;
     background-color: var(--blacky);
@@ -23,11 +60,26 @@ body {
     overflow-x: hidden;
 }
 
-.width-control {
-    max-width: 1200px;
+@mixin center {
     margin-left: auto !important;
     margin-right: auto !important;
 }
+
+.width-control {
+    max-width: 1200px;
+    @include center;
+}
+
+.width-control-sm {
+    @include center;
+    max-width: 700px;
+}
+
+.width-control-md {
+    @include center;
+    max-width: 900px;
+}
+
 
 a {
     cursor: pointer;
@@ -43,16 +95,18 @@ a {
     }
 
     label {
-        display: block;
+        display: inline-block;
         margin: 0.5em 0;
     }
 
     input {
+        display: block;
         padding: 0.4em;
         border-radius: 0.5em;
         border: none;
         font-family: "Poppins", sans-serif;
-        max-width: 300px;
+        max-width: 20em;
+        min-width: 200px;
         width: 100%;
     }
 
@@ -66,15 +120,85 @@ a {
         color: var(--error);
     }
 
-    button[type="submit"] {
-        cursor: pointer;
-        padding: 0.5em 1em;
-        border-radius: 0.3em;
-        font-family: "Poppins", sans-serif;
-        margin: 1em auto 1em 0;
-        background-color: var(--dark-green);
-        color: var(--whitey);
-        border: none;
+    .linear-fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
     }
 }
 
+@mixin button {
+    cursor: pointer;
+    padding: 0.5em 1em;
+    border-radius: 0.3em;
+    font-family: "Poppins", sans-serif;
+    margin: 1em 0;
+    color: white;
+    border: none;
+}
+
+button[type="submit"], .btn-highlight {
+    @include button;
+    background-color: var(--dark-green);
+}
+
+.btn-dark {
+    @include button;
+    background-color: var(--blacky);
+    border: 1px solid var(--light-gray);
+}
+
+.error-msg {
+    color: var(--error);
+}
+
+@media screen and (max-width: 600px) {
+
+    .linear-fields {
+        display: block !important;
+    }
+}
+
+.info-link > a {
+    color: var(--greene);
+    text-decoration: underline;
+}
+
+.info-msg {
+    color: var(--greene);
+}
+
+.postbox {
+    background-color: var(--grey);
+    justify-content: space-between;
+    border-radius: 0.5em;
+    margin: 1.75em 0;
+
+    .post {
+        display: flex;
+        gap: 2em;
+        align-items: center;
+        padding: 1em;
+
+
+        .thumbnail {
+            height: 8em;
+            width: 10em;
+            object-fit: cover;
+            border-radius: 0.2em;
+            flex-shrink: 0;
+        }
+
+        .text {
+            h4 {
+                margin: 0 0 0.2em;
+            }
+
+            p {
+                margin: 0;
+                font-size: 0.96em;
+                color: var(--dark-white);
+            }
+        }
+    }
+
+}

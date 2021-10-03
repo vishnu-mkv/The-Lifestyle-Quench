@@ -1,0 +1,89 @@
+<section *ngIf="profile | async as profile" class="width-control-md" id="profile">
+    <div id="details">
+        <div class="left">
+            <img [src]="profile?.profile_pic" alt="" id="profile-pic">
+        </div>
+        <div class="right">
+            <h3 id="username">{{profile?.user?.first_name + ' ' + profile?.user?.last_name}}</h3>
+            <p id="email">{{profile?.user?.email}}</p>
+        </div>
+        <div class="end">
+            <p [hidden]="!profile.user.writer" class="status">writer</p>
+            <p [hidden]="!profile.user.staff" class="status">staff</p>
+            <p [hidden]="!profile.user.admin" class="status">admin</p>
+        </div>
+    </div>
+    <div id="actions">
+        <h3>Actions</h3>
+        <ul id="action-items">
+            <li>
+                <mat-icon>person</mat-icon>
+                <a routerLink="">Update Profile</a></li>
+            <li>
+                <mat-icon>password</mat-icon>
+                <a routerLink="">Change Password</a></li>
+            <ng-container *ngIf="!profile.user.writer; else editWriter">
+                <li>
+                    <mat-icon>approval</mat-icon>
+                    <a routerLink="">Apply for writer</a></li>
+            </ng-container>
+        </ul>
+    </div>
+
+    <div *ngIf="isWriter" id="posts">
+        <div id="header">
+            <h3>Your posts</h3>
+            <div id="action">
+                <mat-icon>add</mat-icon>
+                <span>New Post</span></div>
+        </div>
+        <div class="container">
+            <div *ngFor="let post of posts" class="postbox">
+                <div class="post">
+                    <img [src]="post.thumbnail" alt="" class="thumbnail">
+                    <div class="text">
+                        <h4>{{post.title}}</h4>
+                        <p>{{shortenString(post.summary, 100)}}</p>
+                    </div>
+                </div>
+                <div class="toolbar">
+                    <p *ngIf="post.status == 'D'  || post.status == 'R'" class="tool-option">
+                        <mat-icon class="material-icons-outlined">border_color</mat-icon>
+                        Edit
+                    </p>
+                    <p (click)="submitPost(post)" *ngIf="post.status == 'D' || post.status == 'R'" class="tool-option">
+                        <mat-icon class="material-icons-outlined">approval</mat-icon>
+                        Submit
+                    </p>
+                    <p (click)="openConfirmation(post)" *ngIf="post.status == 'D' || post.status == 'R'"
+                       class="tool-option">
+                        <mat-icon class="material-icons-outlined">delete_outline</mat-icon>
+                        Delete
+                    </p>
+                    <p (click)="deleteSubmission(post)" *ngIf="post.status == 'S'" class="tool-option">
+                        Unsubmit
+                    </p>
+                    <p class="status">
+                        {{post.status == 'P' ? 'Published' : post.status == 'D' ? 'Draft' : post.status == 'S' ? 'Submitted' : 'Rejected'}}
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<ng-template #editWriter>
+    <li>
+        <mat-icon>badge</mat-icon>
+        <a routerLink="">Edit writer profile</a></li>
+</ng-template>
+
+<popup id="confirm-delete">
+    <h3>Delete Post?</h3>
+    <p>Are you sure you want to delete this post? This Action is irreversible.</p>
+    <div class="popup-buttons">
+        <button (click)="deletePost()" class="btn-highlight">Confirm</button>
+        <button (click)="popupService.close('confirm-delete')" class="btn-dark">Cancel</button>
+    </div>
+</popup>

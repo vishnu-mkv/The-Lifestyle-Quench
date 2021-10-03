@@ -12,3 +12,28 @@ export interface Profile {
             writer: boolean
         }
 }
+
+export interface writerProfile {
+    writer_name: string,
+    bio: string
+}
+
+export interface userRegistration {
+    email: string,
+    first_name: string,
+    last_name: string,
+    password: string
+}
+
+
+export interface post {
+    id: number,
+    slug: string,
+    status: string,
+    last_edited: string,
+    summary: string,
+    thumbnail: string,
+    writer: string,
+    title: string,
+    content: string
+}

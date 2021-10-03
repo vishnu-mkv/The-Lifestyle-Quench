@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {NavigationEnd, Router} from "@angular/router";
-import {NavService} from "./nav.service";
+import {NavService} from "./services/nav.service";
 
 @Component({
     selector: 'app-root',
@@ -16,7 +16,7 @@ export class AppComponent {
             next: event => {
                 if (event instanceof NavigationEnd) {
                     this.nav.showNav(false);
-                    console.log("Close");
+                    this.nav.showDropdown(false);
                 }
             }
         })

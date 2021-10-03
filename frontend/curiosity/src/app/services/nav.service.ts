@@ -7,6 +7,7 @@ import {BehaviorSubject} from "rxjs";
 export class NavService {
 
     showNavSubject = new BehaviorSubject(false);
+    showDropdownSubject = new BehaviorSubject(false);
 
     constructor() {
     }
@@ -22,5 +23,18 @@ export class NavService {
     toggleNav() {
         let next = !this.showNavSubject.getValue();
         this.showNavSubject.next(next);
+    }
+
+    getShowDropdown() {
+        return this.showDropdownSubject.asObservable();
+    }
+
+    showDropdown(val: boolean) {
+        this.showDropdownSubject.next(val);
+    }
+
+    toggleDropdown() {
+        let next = !this.showDropdownSubject.getValue();
+        this.showDropdownSubject.next(next);
     }
 }

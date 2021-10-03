@@ -1,1 +1,70 @@
-<p>register works!</p>
+<section class="width-control-md" id="register">
+    <h2>Register</h2>
+    <p *ngFor="let err of errors" class="error-msg">{{err}}</p>
+    <div *ngIf="(isAuthenticated | async); else form">
+        <p class="info-link">You're already logged in. <a (click)="auth.logout(false)">Click here to Logout</a></p>
+    </div>
+
+    <ng-template #form>
+        <ng-container *ngIf="!registerSuccess; else success">
+            <form #registerForm="ngForm" (ngSubmit)="register(registerForm)" class="form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input #email="ngModel" (keyup)="checkEmail(email)" id="email" name="email" ngModel
+                           pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                           required type="text">
+                    <p [hidden]="emailAvailable" class="invalid-msg">An account already exists with is email id</p>
+                    <p [hidden]="!((registerForm.submitted && email.invalid) || (email.touched && email.errors?.pattern))"
+                       class="invalid-msg">
+                        A valid email is required
+                    </p>
+                </div>
+                <div class="linear-fields">
+                    <div class="form-group">
+                        <label for="fName">First Name</label>
+                        <input #fName="ngModel" id="fName" maxlength="20" minlength="2" name="fName" ngModel required
+                               type="text">
+                        <p [hidden]="!(registerForm.submitted && fName.invalid)" class="invalid-msg">First Name is
+                            required</p>
+                        <p [hidden]="!(fName.touched && (fName.errors?.minlength || fName.errors?.maxlength))"
+                           class="invalid-msg">Must be 2 - 20 characters long</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="lName">Last Name</label>
+                        <input #lName="ngModel" id="lName" maxlength="20" minlength="1" name="lName" ngModel required
+                               type="text">
+                        <p [hidden]="!(registerForm.submitted && fName.invalid)" class="invalid-msg">Last Name is
+                            required</p>
+                        <p [hidden]="!(lName.touched && (lName.errors?.minlength || lName.errors?.maxlength))"
+                           class="invalid-msg">Must be 2 - 20 characters long</p>
+                    </div>
+                </div>
+                <div class="linear-fields">
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input #password="ngModel" id="password" maxlength="20" minlength="8" name="password" ngModel
+                               required type="password">
+                        <p [hidden]="!(registerForm.submitted && password.invalid)" class="invalid-msg">Password is
+                            required</p>
+                        <p [hidden]="!(password.touched && (password.errors?.minlength || password.errors?.maxlength))"
+                           class="invalid-msg">Password must be 8 - 20 characters long</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="cPassword">Confirm Password</label>
+                        <input #cPassword="ngModel" id="cPassword" name="cPassword" ngModel required type="password">
+                    </div>
+                </div>
+                <button type="submit">Register</button>
+            </form>
+        </ng-container>
+        <p class="info-link">Already have an account? <a routerLink="/login">Login</a></p>
+        <p class="info-link">Haven't activated your account yet? <a routerLink="/register/activate">Resend activation
+            link</a></p>
+    </ng-template>
+
+
+    <ng-template #success>
+        <p>Registration complete. An email has been sent to your email - {{email}}. CLick on the link provided in the
+            email to verify your account. </p>
+    </ng-template>
+</section>

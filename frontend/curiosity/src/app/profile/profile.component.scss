@@ -1,0 +1,165 @@
+#profile {
+    padding: 1em;
+    margin-top: 3em;
+
+    #details {
+        display: flex;
+        gap: 2em;
+        background-color: var(--grey);
+        border-radius: 1em;
+        padding: 1em;
+
+        .left {
+            flex: 0 0 0;
+            margin: 0 1em;
+
+            #profile-pic {
+                border-radius: 50%;
+                height: 6.5em;
+                width: 6.5em;
+                object-fit: cover;
+            }
+        }
+
+        .right {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.2em;
+
+            #username {
+                color: white;
+                margin: 0;
+            }
+
+            #email {
+                margin: 0;
+                color: var(--dark-white);
+            }
+        }
+
+        .end {
+            margin-left: auto;
+            display: flex;
+            place-items: center;
+            gap: 0.5em;
+        }
+    }
+}
+
+.status {
+    font-size: 0.9em;
+    padding: 0.1em 0.4em;
+    background-color: var(--dark-green);
+    border-radius: 0.2em;
+}
+
+#actions {
+    margin-top: 2em;
+}
+
+#action-items {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    gap: 1em;
+
+    li {
+        display: flex;
+        padding: 0.5em 0.75em;
+        gap: 1em;
+        background-color: var(--grey);
+        border: 1px solid var(--light-gray);
+        border-radius: 0.25em;
+    }
+}
+
+@media screen and (max-width: 600px) {
+
+    #profile {
+        margin-top: 1em;
+    }
+
+    #details {
+        gap: 1em !important;
+        flex-direction: column;
+        place-items: center;
+
+        .right {
+            place-items: center;
+        }
+
+        .end {
+            margin: auto;
+        }
+    }
+
+    #action-items {
+        flex-direction: column;
+        gap: 0.7em;
+    }
+}
+
+#posts {
+    margin-top: 3em;
+}
+
+#header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h3 {
+        margin: 1em 0;
+    }
+
+    #action {
+        display: flex;
+        background-color: var(--grey);
+        border-radius: 0.4em;
+        padding: 0.2em 0.5em;
+        gap: 0.3em;
+        font-size: 1.05em;
+        cursor: pointer;
+    }
+}
+
+
+.toolbar {
+
+    display: flex;
+    border-top: 1px solid var(--light-gray);
+    justify-content: flex-end;
+    padding: 1em;
+    gap: 0.8em;
+    font-size: 1em;
+
+
+    * {
+        margin: 0;
+    }
+
+    .tool-option {
+
+        background-color: var(--light-gray);
+        display: flex;
+        padding: 0.1em 0.4em;
+        border-radius: 0.2em;
+        cursor: pointer;
+        align-items: center;
+        gap: 0.4em;
+
+        mat-icon {
+            font-size: 1em;
+            height: 1em;
+            width: 1em;
+            display: inline;
+        }
+    }
+
+    .status {
+        background-color: var(--info);
+        margin: auto 0;
+        font-size: 1em;
+    }
+}

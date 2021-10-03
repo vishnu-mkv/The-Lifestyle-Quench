@@ -1,9 +1,8 @@
-<section class="width-control" id="login">
+<section class="width-control-sm" id="login">
     <h2>Login</h2>
-    <p [hidden]="!loginError" class="error-msg">Unable to login with given credentials. Email and Password are case
-        sensitive.</p>
+    <p *ngFor="let err of error_msg" [hidden]="!loginError" class="error-msg"> {{err}}</p>
     <div *ngIf="(isAuthenticated | async); else form">
-        <p>You're already logged in. <a (click)="auth.logout(false)">Click here to Logout</a></p>
+        <p class="info-link">You're already logged in. <a (click)="auth.logout(false)">Click here to Logout</a></p>
     </div>
     <ng-template #form>
         <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" class="form">
@@ -22,7 +21,9 @@
             <button type="submit">Login</button>
         </form>
 
-        <p>Forgot your password? <a routerLink="">Recover your account</a></p>
-        <p>Doesn't have an account? <a routerLink="/register">Register</a></p>
+        <p class="info-link">Forgot your password? <a routerLink="">Recover your account</a></p>
+        <p class="info-link">Haven't activated your account yet? <a routerLink="/register/activate">Resend activation
+            link</a></p>
+        <p class="info-link">Doesn't have an account? <a routerLink="/register">Register</a></p>
     </ng-template>
 </section>

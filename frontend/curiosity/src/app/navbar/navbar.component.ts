@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
-import {AuthService} from "../auth.service";
-import {NavService} from "../nav.service";
+import {AuthService} from "../services/auth.service";
+import {NavService} from "../services/nav.service";
 import {Profile} from "../interfaces";
 import {Router} from "@angular/router";
 
@@ -16,7 +16,7 @@ import {Router} from "@angular/router";
 export class NavbarComponent implements OnInit {
 
     showNav: Observable<boolean>;
-    showDropdown: boolean = false;
+    showDropdown: Observable<boolean>;
     isLoggedIn: Observable<boolean>;
     profile: Observable<Profile>;
     name = "";
@@ -25,6 +25,7 @@ export class NavbarComponent implements OnInit {
     constructor(private router: Router, private auth: AuthService,
                 private nav: NavService, private _eref: ElementRef) {
         this.showNav = nav.getShowNav();
+        this.showDropdown = nav.getShowDropdown();
         this.isLoggedIn = auth.isLoggedIn();
         this.profile = auth.getProfile();
         this.profile.subscribe({
@@ -47,11 +48,11 @@ export class NavbarComponent implements OnInit {
     }
 
     toggleDropDown() {
-        this.showDropdown = !this.showDropdown;
+        this.nav.toggleDropdown();
     }
 
     closeOnOutsideClick(event: any) {
         if (!this._eref.nativeElement.querySelector('#acc-view')?.contains(event.target)) // or some similar check
-            this.showDropdown = false;
+            this.nav.showDropdown(false);
     }
 }

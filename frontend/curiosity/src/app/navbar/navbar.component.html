@@ -22,8 +22,8 @@
     <div id="acc-view">
         <!--        <span>{{name}}</span>-->
         <img (click)="toggleDropDown()" [src]="picUrl" alt="profile-pic" id="profile-pic"/>
-        <div [ngClass]="(showDropdown)?'dropdown-show':''" class="dropdown">
-            <a routerLink="/register">Profile</a>
+        <div [ngClass]="(showDropdown | async)?'dropdown-show':''" class="dropdown">
+            <a routerLink="/profile">Profile</a>
             <a (click)="logout()">Logout</a>
         </div>
     </div>

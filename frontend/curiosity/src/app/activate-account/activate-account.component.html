@@ -1,0 +1,33 @@
+<section class="width-control-md activate">
+    <h2>Activate account</h2>
+    <ng-container *ngIf="isAuthenticated; else query">
+        <p>Your account is already active.</p>
+    </ng-container>
+</section>
+
+<ng-template #form>
+    <p [hidden]="!hasKey || activationSuccess" class="error-msg">{{errorMessage}}</p>
+    <p [hidden]="!(!sendSuccess)" class="error-msg">{{errorMessage}}</p>
+    <p [hidden]="!(sendSuccess)" class="info-msg">{{message}}</p>
+    <form #activationForm="ngForm" (ngSubmit)="sendActivation(activationForm)" class="form">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input #email="ngModel" id="email" name="email" ngModel pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                   required
+                   type="email">
+            <div [hidden]="!((activationForm.submitted && email.invalid) || (email.touched && email.errors?.pattern))"
+                 class="invalid-msg">A valid email is required
+            </div>
+        </div>
+        <button type="submit">Send activation</button>
+    </form>
+</ng-template>
+<ng-template #query>
+    <ng-container *ngIf="hasKey; else form">
+        <div *ngIf="activationSuccess; else form">
+            <p class="info-link">Your account {{user}} has been activated. You will be redirected to login page
+                in {{seconds}} seconds or click here to
+                <a routerLink="/login">Login</a></p>
+        </div>
+    </ng-container>
+</ng-template>

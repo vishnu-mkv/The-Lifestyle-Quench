@@ -49,8 +49,8 @@ def register_view(request):
     serializer = RegisterUserSerializer(data=request.data)
     if serializer.is_valid():
         user = User.objects.create_user(**serializer.validated_data)
-        return Response({'message': 'success', 'user': user.email})
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'success': True, 'email': user.email})
+    return Response({'success': False, 'email': "", 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -68,12 +68,12 @@ def activate_user_view(request):
 def resend_activation_view(request):
     email = request.data.get('email')
     if not email:
-        return Response({'email': 'this field is required'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'email': 'This field is required'}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
         user = User.objects.get(email=email)
         if user.active:
-            return Response({'email': 'user is already active'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'User is already active'}, status=status.HTTP_400_BAD_REQUEST)
 
         time_threshold = datetime.datetime.now(
             tz=pytz.utc) - datetime.timedelta(hours=24)
@@ -82,13 +82,13 @@ def resend_activation_view(request):
 
         # Limit number of requests per day
         if qs.count() >= settings.DAILY_ACTIVATION_LIMIT:
-            return Response({'email': 'too many requests today. Try again tomorrow'},
+            return Response({'message': 'Too many requests today. Try again tomorrow'},
                             status=status.HTTP_400_BAD_REQUEST)
         send_activation_email(user)
-        return Response({'success': True})
+        return Response({'message': 'Activation email has been sent'})
 
     except User.DoesNotExist:
-        return Response({'email': 'invalid email'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': 'Invalid email'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -165,6 +165,15 @@ def profile_view(request):
             return Response(serializer.validated_data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_writer_profile_view(request):
+    try:
+        profile = WriterProfile.objects.get(user = request.user)
+        serializer = WriterProfileSerializer(instance=profile)
+        return Response(serializer.data)
+    except WriterProfile.DoesNotExist:
+        return Response({"user": "Not a writer"}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET', 'PATCH'])
 def writer_profile_view(request, writer_name):

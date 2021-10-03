@@ -10,7 +10,9 @@ def change_post_status(sender, instance, created, **kwargs):
         print("post", instance, instance.post)
         if instance.approved is True:
             instance.post.status = 'P'
-        else:
+        elif instance.approved is False:
+            instance.post.status = 'R'
+        else :
             instance.post.status = 'D'
     else:
         instance.post.status = 'S'

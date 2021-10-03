@@ -10,9 +10,17 @@ import {RegisterComponent} from './register/register.component';
 import {HttpClientModule} from '@angular/common/http'
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {TokenInterceptor} from './auth.interceptor';
-import {AuthService} from './auth.service';
+import {AuthService} from './services/auth.service';
 import {Router} from '@angular/router';
 import {FormsModule} from "@angular/forms";
+import {ActivateAccountComponent} from './activate-account/activate-account.component';
+import {ProfileComponent} from './profile/profile.component';
+import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatIconModule} from '@angular/material/icon';
+import {MessageComponent} from './message/message.component';
+import {PopupModule} from "./popup";
+import {PasswordComponent} from './password/password.component';
 
 @NgModule({
     declarations: [
@@ -21,12 +29,20 @@ import {FormsModule} from "@angular/forms";
         NavbarComponent,
         LoginComponent,
         RegisterComponent,
+        ActivateAccountComponent,
+        ProfileComponent,
+        PageNotFoundComponent,
+        MessageComponent,
+        PasswordComponent
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
         HttpClientModule,
-        FormsModule
+        FormsModule,
+        BrowserAnimationsModule,
+        MatIconModule,
+        PopupModule
     ],
     providers: [
         {

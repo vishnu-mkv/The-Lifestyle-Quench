@@ -28,12 +28,14 @@ POST_STATUS_CHOICES = [
     ('S', 'SUBMITTED'),
     ('D', 'DRAFT'),
     ('P', 'PUBLISHED'),
+    ('R', 'REJECTED')
 ]
 
 
 class Post(models.Model):
     slug = models.SlugField(max_length=150, unique=True)
     title = models.CharField(max_length=120)
+    summary = models.CharField(max_length=1000)
     content = models.TextField()
     writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, validators=[validate_for_writer],
                                null=True)

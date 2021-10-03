@@ -30,6 +30,9 @@ class AuthTokenSerializer(serializers.Serializer):
         password = attrs.get('password')
 
         if email and password:
+            user = User.objects.get(email=email)
+            if user and not user.is_active:
+                raise serializers.ValidationError("The account is inactive")
             user = authenticate(request=self.context.get('request'),
                                 username=email, password=password)
 
