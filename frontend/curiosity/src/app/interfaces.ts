@@ -37,3 +37,16 @@ export interface post {
     title: string,
     content: string
 }
+
+export interface updateProfile {
+    first_name: string,
+    last_name: string,
+    profile_pic: string
+}
+
+export interface InputEdit {
+    label: string,
+    id: string,
+    value: string,
+    onEdit: boolean,
+}

@@ -45,6 +45,7 @@ $curiosity-theme: mat.define-light-theme((
     --dark-white: #aba9a9;
     --light-gray: rgba(44, 44, 45, 0.38);
     --info: #145873;
+    --cropper-overlay-color: #17161a;
 }
 
 html,
@@ -99,17 +100,6 @@ a {
         margin: 0.5em 0;
     }
 
-    input {
-        display: block;
-        padding: 0.4em;
-        border-radius: 0.5em;
-        border: none;
-        font-family: "Poppins", sans-serif;
-        max-width: 20em;
-        min-width: 200px;
-        width: 100%;
-    }
-
     input:focus {
         outline: none;
     }
@@ -124,6 +114,17 @@ a {
         display: grid;
         grid-template-columns: 1fr 1fr;
     }
+}
+
+input {
+    display: block;
+    padding: 0.4em;
+    border-radius: 0.5em;
+    border: none;
+    font-family: "Poppins", sans-serif;
+    max-width: 20em;
+    min-width: 200px;
+    width: 100%;
 }
 
 @mixin button {
@@ -201,4 +202,17 @@ button[type="submit"], .btn-highlight {
         }
     }
 
+}
+
+#profile-pic {
+    border-radius: 50%;
+    height: 6.5em;
+    width: 6.5em;
+    object-fit: cover;
+}
+
+
+.button-group {
+    display: flex;
+    gap: 1em;
 }

@@ -1,7 +1,6 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../services/auth.service";
 import {Observable} from "rxjs";
-import {PasswordComponent} from "../password/password.component";
 
 @Component({
     selector: 'app-register',

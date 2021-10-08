@@ -124,7 +124,14 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'users.authentication.ExpiringTokenAuthentication.ExpiringTokenAuthentication',
     ],
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.JSONParser',
+     )
 }
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880*2
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -167,7 +174,7 @@ EMAIL_HOST_PASSWORD = EMAIL_APP_KEY
 
 # user activation email
 DAILY_ACTIVATION_LIMIT = 10
-DAILY_FORGOT_PASSWORD_EMAIL_LIMIT = 1
+DAILY_FORGOT_PASSWORD_EMAIL_LIMIT = 10
 
 # Authentication token validity in hours
 AUTH_TOKEN_VALIDITY = 1080

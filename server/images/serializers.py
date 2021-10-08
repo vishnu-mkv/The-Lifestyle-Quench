@@ -1,13 +1,18 @@
 from rest_framework import serializers
+from drf_extra_fields.fields import Base64ImageField
 from .models import ProfileImage, PostThumbnail, PostImage
 
 
 class ProfilePicSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(use_url=True)
+    image = Base64ImageField()
 
     class Meta:
         model = ProfileImage
         fields = ['image']
+
+    def create(self, validated_data):
+        image=validated_data.pop('image')
+        return ProfileImage.objects.create(image=image)
 
 
 class PostThumbnailSerializer(serializers.ModelSerializer):

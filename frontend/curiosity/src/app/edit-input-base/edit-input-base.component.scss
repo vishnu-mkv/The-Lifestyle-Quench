@@ -1,0 +1,60 @@
+.form-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.6em;
+    gap: 1em;
+
+    & > .form-group {
+        padding: 0;
+    }
+
+    label, & > span {
+        margin: 0;
+        flex-shrink: 0;
+    }
+
+    span {
+        font-weight: 500;
+        font-size: 1.1em;
+    }
+
+    input {
+        flex-shrink: 1;
+    }
+
+    .show {
+        gap: 1em;
+        align-items: center;
+        color: var(--greene);
+    }
+}
+
+mat-icon {
+    font-size: 1.3em;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: var(--greene);
+}
+
+.hide {
+    display: none;
+}
+
+.red {
+    color: var(--error)
+}
+
+.short {
+    gap: 0.5em;
+}
+
+.edit {
+    font-size: 1em;
+}
+
+.container {
+    flex-direction: column;
+    gap: 0.4em;
+}

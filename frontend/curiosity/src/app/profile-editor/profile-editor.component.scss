@@ -1,0 +1,23 @@
+#edit-profile {
+    padding: 1em;
+    margin-top: 2em;
+}
+
+.hidden {
+    display: none;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.form {
+    padding: 1em;
+}
+
+#profile-pic {
+    width: 10em;
+    height: 10em;
+    cursor: pointer;
+}

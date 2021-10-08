@@ -96,7 +96,7 @@ def change_password_view(request):
     serializer = ChangePasswordSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response({'status': 'success', 'user': serializer.validated_data.get('email')})
+        return Response({'success': True, 'message': "Password has been changed successfully"})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -105,7 +105,7 @@ def forgot_password_change_view(request):
     serializer = ForgotPasswordChangeSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response({'status': 'success', 'user': serializer.user.email})
+        return Response({'success': True, 'user': serializer.user.email})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -117,18 +117,18 @@ def forgot_password_user_view(request):
             instance = ForgotPasswordKey.objects.get(key=key)
             if instance.is_valid():
                 return Response({'name': instance.user.get_full_name(), 'email': instance.user.email})
-            return Response({'key': 'The key was already used or expired'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'The key was already used or expired'}, status=status.HTTP_400_BAD_REQUEST)
         except ForgotPasswordKey.DoesNotExist:
-            return Response({'key': 'Invalid key'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'Invalid key'}, status=status.HTTP_400_BAD_REQUEST)
 
-    return Response({'key': 'This field is required'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message': 'Key is required'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
 def forgot_password_send_email_view(request):
     email = request.data.get('email')
     if not email:
-        return Response({'email': 'this field is required'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
         user = User.objects.get(email=email)
@@ -140,13 +140,13 @@ def forgot_password_send_email_view(request):
 
         # Limit number of requests per day
         if qs.count() >= settings.DAILY_FORGOT_PASSWORD_EMAIL_LIMIT:
-            return Response({'email': 'too many requests today. Try again tomorrow'},
+            return Response({'message': 'too many requests today. Try again tomorrow'},
                             status=status.HTTP_400_BAD_REQUEST)
         send_forgot_password_email(user)
-        return Response({'success': True})
+        return Response({'message': "A mail has been sent to your email. Follow the link to change your password.", 'success': True})
 
     except User.DoesNotExist:
-        return Response({'email': 'invalid email'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': 'invalid email'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET', 'PATCH'])
@@ -162,7 +162,7 @@ def profile_view(request):
             instance=request.user, data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.validated_data)
+            return Response({'data': serializer.validated_data, 'success': True})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])

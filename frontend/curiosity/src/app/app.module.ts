@@ -20,7 +20,12 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatIconModule} from '@angular/material/icon';
 import {MessageComponent} from './message/message.component';
 import {PopupModule} from "./popup";
-import {PasswordComponent} from './password/password.component';
+import {ForgotPasswordComponent} from "./forgot-password/forgot-password.component";
+import {ChangePasswordComponent} from './change-password/change-password.component';
+import {ImageCropperModule} from "ngx-image-cropper";
+import {ProfileEditorComponent} from './profile-editor/profile-editor.component';
+import {EditInputBaseComponent} from './edit-input-base/edit-input-base.component';
+import {ProfileImageCropperComponent} from './profile-image-cropper/profile-image-cropper.component';
 
 @NgModule({
     declarations: [
@@ -33,7 +38,11 @@ import {PasswordComponent} from './password/password.component';
         ProfileComponent,
         PageNotFoundComponent,
         MessageComponent,
-        PasswordComponent
+        ForgotPasswordComponent,
+        ChangePasswordComponent,
+        ProfileEditorComponent,
+        EditInputBaseComponent,
+        ProfileImageCropperComponent
     ],
     imports: [
         BrowserModule,
@@ -42,7 +51,8 @@ import {PasswordComponent} from './password/password.component';
         FormsModule,
         BrowserAnimationsModule,
         MatIconModule,
-        PopupModule
+        PopupModule,
+        ImageCropperModule
     ],
     providers: [
         {

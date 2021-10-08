@@ -1,0 +1,16 @@
+<div *ngIf="props" class="form-group container">
+    <label [for]="props.id">{{props.label}}</label>
+
+    <div [style.display]="props.onEdit ? 'none': 'flex'" class="show">
+        <span>{{props.value}}</span>
+        <mat-icon (click)="props.onEdit = true; edit=this.props.value">drive_file_rename_outline</mat-icon>
+    </div>
+
+    <div [class]="!props.onEdit ? 'hide' : ''" class="form-group short">
+        <input #fName="ngModel" [(ngModel)]="edit" [id]="props.id" name="fName"
+               type="text">
+        <mat-icon (click)="save()">save</mat-icon>
+        <mat-icon (click)="props.onEdit = false;" class="red">cancel</mat-icon>
+    </div>
+
+</div>

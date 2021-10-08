@@ -9,10 +9,12 @@ from .serializers import ProfilePicSerializer, PostThumbnailSerializer, PostImag
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def profile_pic_upload_view(request):
-    serializer = ProfilePicSerializer(data=request.FILES)
+
+    serializer = ProfilePicSerializer(data=request.data)
+
     if serializer.is_valid():
         instance = serializer.save()
-        return Response({'image': request.build_absolute_uri(instance.image.url)})
+        return Response({'url': request.build_absolute_uri(instance.image.url), 'success': True})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {apiURL} from "../../environments/environment";
-import {BehaviorSubject, Observable, ReplaySubject, throwError} from "rxjs";
+import {BehaviorSubject, Observable, ReplaySubject} from "rxjs";
 import {share, tap} from "rxjs/operators";
 import {Profile, userRegistration, writerProfile} from "../interfaces";
 import {Router} from "@angular/router";
@@ -31,6 +31,31 @@ interface keyActivate {
 
 interface activationReply {
     message: string
+}
+
+interface forgotPasswordUser {
+    name: string,
+    email: string
+}
+
+interface forgotPasswordSendEmail {
+    success: boolean,
+    message: string
+}
+
+interface forgotPasswordChange {
+    success: boolean,
+    email: string
+}
+
+interface changePassword {
+    success: boolean,
+    message: string
+}
+
+interface profileImageUpload {
+    success: boolean,
+    url: string
 }
 
 @Injectable({
@@ -136,6 +161,35 @@ export class AuthService {
             },
             err => console.log(err)
         );
+    }
+
+    getForgotPasswordKeyUser(key: string) {
+        return this.http.post<forgotPasswordUser>(apiURL + 'api/users/forgot-password/get-user/', {key});
+    }
+
+    sendForgotPasswordEmail(email: string) {
+        return this.http.post<forgotPasswordSendEmail>(apiURL + 'api/users/forgot-password/send-email/', {email});
+    }
+
+    changePasswordWithKey(key: string, password: string) {
+        return this.http.post<forgotPasswordChange>(apiURL + 'api/users/forgot-password/change-password/', {
+            key,
+            new_password: password
+        });
+    }
+
+    changePassword(email: string, password: string, new_password: string) {
+        return this.http.post<changePassword>(apiURL + 'api/users/change-password/', {email, password, new_password});
+    }
+
+    uploadProfileImage(image: string) {
+        let form = new FormData();
+        form.append('image', image);
+        return this.http.post<profileImageUpload>(apiURL + 'upload/images/profile-pic/', form);
+    }
+
+    updateProfile(first_name: string, last_name: string, profile_pic: string) {
+        return this.http.patch(apiURL + 'api/users/profile/', {first_name, last_name, profile_pic});
     }
 }
 

@@ -18,10 +18,10 @@
         <ul id="action-items">
             <li>
                 <mat-icon>person</mat-icon>
-                <a routerLink="">Update Profile</a></li>
+                <a routerLink="edit">Update Profile</a></li>
             <li>
                 <mat-icon>password</mat-icon>
-                <a routerLink="">Change Password</a></li>
+                <a routerLink="change-password">Change Password</a></li>
             <ng-container *ngIf="!profile.user.writer; else editWriter">
                 <li>
                     <mat-icon>approval</mat-icon>

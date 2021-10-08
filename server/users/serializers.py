@@ -179,9 +179,11 @@ class EditProfileSerializer(serializers.Serializer):
         pass
 
     def validate_profile_pic(self, profile_pic):
+        print(profile_pic)
         response = validate_image_url(url=profile_pic, Model=ProfileImage,
                                       request=self.context['request'])
         self.profile_image_instance = response
+        print("HERE" , response)
         return profile_pic
 
     def validate_email(self, email):
