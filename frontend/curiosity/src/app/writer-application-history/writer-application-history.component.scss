@@ -1,0 +1,38 @@
+#applications {
+    padding: 1em;
+    margin-top: 1em;
+}
+
+.container {
+    padding: 0.5em 1em;
+    margin-bottom: 2em;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background-color: var(--grey);
+    border-radius: 0.6em;
+
+    p {
+        display: flex;
+        gap: 1em;
+        color: var(--greene);
+        margin: 0.5em 0;
+
+        span {
+            color: var(--whitey);
+        }
+    }
+
+    .pop-able {
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+}

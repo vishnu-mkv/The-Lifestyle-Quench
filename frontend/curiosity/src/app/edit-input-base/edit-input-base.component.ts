@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {InputEdit} from "../interfaces";
+import {editInput, InputEdit} from "../interfaces";
 
 @Component({
     selector: 'app-edit-input-base',
@@ -8,19 +8,19 @@ import {InputEdit} from "../interfaces";
 })
 export class EditInputBaseComponent implements OnInit {
 
-    @Input() props: InputEdit = {label: "", id: "", value: "", onEdit: false};
+    @Input() props: InputEdit = new editInput();
 
-    original: string;
+    original: string = "";
     edit: string = "";
 
     constructor() {
-        this.original = this.props.value;
     }
 
     ngOnInit(): void {
         if (!this.props) {
             return;
         }
+        this.original = this.props.value;
     }
 
     reset(): void {

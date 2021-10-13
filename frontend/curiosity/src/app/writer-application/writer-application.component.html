@@ -1,0 +1,30 @@
+<section class="width-control-md" id="writer-application">
+    <div class="ribbon">
+        <h3>Apply for writer</h3>
+        <a id="action" routerLink="./history">
+            <mat-icon>history</mat-icon>
+            <span>History</span>
+        </a>
+    </div>
+
+    <form #form="ngForm" (ngSubmit)="edit? updateChanges(form) : apply(form)" class="form">
+        <div class="form-group vertical">
+            <label for="bio">Tell us about yourself</label>
+            <textarea #bio="ngModel" [(ngModel)]="data.bio" cols="50" id="bio"
+                      name="bio" required rows="10" spellcheck="false"></textarea>
+            <p [class]="!(form.submitted && bio.invalid) ? 'hidden': ''" class="error-msg">Bio is required</p>
+        </div>
+        <div class="form-group vertical">
+            <label for="writings">Your writings and links</label>
+            <textarea #writings="ngModel" [(ngModel)]="data.writings" cols="50" id="writings"
+                      name="writings" required rows="5" spellcheck="false"></textarea>
+            <p [class]="!(form.submitted && writings.invalid) ? 'hidden': ''" class="error-msg">Writings is required</p>
+        </div>
+        <div class="button-group">
+            <button *ngIf="edit" class="btn-highlight">Save Changes</button>
+            <button *ngIf="!edit" class="btn-highlight">Apply</button>
+            <button (click)="reset()" class="btn-dark" type="button">Reset</button>
+        </div>
+    </form>
+</section>
+

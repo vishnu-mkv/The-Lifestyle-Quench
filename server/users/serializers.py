@@ -206,10 +206,11 @@ class WriterProfileSerializer(serializers.ModelSerializer):
 
 class WriterApplicationSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(source='user.email', read_only=True)
+    approved_by = serializers.CharField(source='approved_by.get_full_name', read_only=True)
 
     class Meta:
         model = WriterApplication
-        exclude = ['user', 'approved_by']
+        fields = '__all__'
         extra_kwargs = {
             'user': {
                 'read_only': True

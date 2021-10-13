@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {AuthService} from "../services/auth.service";
 import {Observable} from "rxjs";
-import {Profile, updateProfile} from "../interfaces";
+import {editInput, Profile, updateProfile} from "../interfaces";
 import {MatIconModule} from '@angular/material/icon';
 import {PopupService} from "../popup";
 import {EditInputBaseComponent} from "../edit-input-base/edit-input-base.component";
@@ -28,33 +28,31 @@ export class ProfileEditorComponent implements OnInit {
         "first_name": false,
         "last_name": false
     }
-    firstName: any;
-    lastName: any;
+    profilePicOriginal = "";
+    firstName = new editInput();
+    lastName = new editInput();
 
     constructor(public auth: AuthService, public popup: PopupService,
                 private router: Router, private messages: MessageService) {
         this.profile = auth.getProfile();
         auth.getProfile().subscribe(
             data => {
+                this.profilePicOriginal = data.profile_pic;
                 this.updateInstance = {
                     first_name: data.user.first_name,
                     last_name: data.user.last_name,
                     profile_pic: data.profile_pic
                 };
-                this.firstName = {
-                    label: 'First Name',
-                    id: 'fName',
-                    value: this.updateInstance.first_name,
-                    edit: this.updateInstance.first_name,
-                    onEdit: false,
-                };
-                this.lastName = {
-                    label: 'Last Name',
-                    id: 'lName',
-                    value: this.updateInstance.last_name,
-                    edit: this.updateInstance.last_name,
-                    onEdit: false,
-                };
+                this.firstName = new editInput(
+                    'First Name',
+                    'fName',
+                    this.updateInstance.first_name,
+                );
+                this.lastName = new editInput(
+                    'Last Name',
+                    'lName',
+                    this.updateInstance.last_name,
+                );
 
             }
         )
@@ -82,6 +80,11 @@ export class ProfileEditorComponent implements OnInit {
     imageUploaded(url: string) {
         this.edit.profile_pic = false;
         this.updateInstance.profile_pic = url;
-        this.popup.close("profile-pic-upload");
+    }
+
+    resetForm() {
+        this.fName.reset();
+        this.lName.reset();
+        this.updateInstance.profile_pic = this.profilePicOriginal;
     }
 }

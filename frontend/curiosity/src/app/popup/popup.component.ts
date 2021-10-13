@@ -25,7 +25,7 @@ export class PopupComponent implements OnInit {
         document.body.appendChild(this.element);
 
         this.element.addEventListener('click', (event: any) => {
-            if (event.target.className === 'popup-background') this.close();
+            if (event.target.className === 'popup') this.close();
         });
 
         this.popupService.add(this);

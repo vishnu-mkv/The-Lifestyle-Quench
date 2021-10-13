@@ -237,6 +237,15 @@ def writer_application_view(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == "GET":
+        application = WriterApplication.objects.filter(user=request.user, approved=None)
+        if application.count() == 0:
+            return Response({"application": False})
+        return Response({"application": True, "data": WriterApplicationSerializer(application.first()).data})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def writer_application_history_view(request):
         user = request.user
         qs = WriterApplication.objects.filter(
             user=user).order_by('-submitted_on')
@@ -340,3 +349,12 @@ def writer_name_availability_view(request):
         return Response({'writer_name': 'This field is required'}, status.HTTP_400_BAD_REQUEST)
     except WriterProfile.DoesNotExist:
         return Response({'writer_name': writer_name, 'availability': True})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def has_pending_writer_application(request):
+    application = WriterApplication.objects.filter(user=request.user, approved=None)
+    if application.count() == 0:
+        return Response({"application": False})
+    return Response({"application": True, "data": WriterApplicationSerializer(application.first()).data})
+

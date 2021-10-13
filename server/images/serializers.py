@@ -10,13 +10,13 @@ class ProfilePicSerializer(serializers.ModelSerializer):
         model = ProfileImage
         fields = ['image']
 
-    def create(self, validated_data):
-        image=validated_data.pop('image')
-        return ProfileImage.objects.create(image=image)
+#     def create(self, validated_data):
+#         image=validated_data.pop('image')
+#         return ProfileImage.objects.create(image=image)
 
 
 class PostThumbnailSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(use_url=True)
+    image = Base64ImageField()
 
     class Meta:
         model = PostThumbnail
@@ -24,9 +24,9 @@ class PostThumbnailSerializer(serializers.ModelSerializer):
 
 
 class PostImageSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(use_url=True)
+    image = Base64ImageField()
     post = serializers.CharField(source='post.slug', read_only=True)
 
     class Meta:
         model = PostImage
-        fields = ['image']
+        fields = ['image', 'post']

@@ -23,15 +23,24 @@
                 <mat-icon>password</mat-icon>
                 <a routerLink="change-password">Change Password</a></li>
             <ng-container *ngIf="!profile.user.writer; else editWriter">
-                <li>
-                    <mat-icon>approval</mat-icon>
-                    <a routerLink="">Apply for writer</a></li>
+                <ng-container *ngIf="hasPendingApplication; else newApplication">
+                    <li>
+                        <mat-icon>edit</mat-icon>
+                        <a routerLink="apply-writer">Edit Writer Application</a>
+                    </li>
+                </ng-container>
+                <ng-template #newApplication>
+                    <li>
+                        <mat-icon>approval</mat-icon>
+                        <a routerLink="apply-writer">Apply for writer</a>
+                    </li>
+                </ng-template>
             </ng-container>
         </ul>
     </div>
 
     <div *ngIf="isWriter" id="posts">
-        <div id="header">
+        <div class="ribbon">
             <h3>Your posts</h3>
             <div id="action">
                 <mat-icon>add</mat-icon>

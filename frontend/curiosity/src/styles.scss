@@ -46,6 +46,7 @@ $curiosity-theme: mat.define-light-theme((
     --light-gray: rgba(44, 44, 45, 0.38);
     --info: #145873;
     --cropper-overlay-color: #17161a;
+    --cropper-outline-color: rgba(44, 44, 45, 0.38);
 }
 
 html,
@@ -100,7 +101,7 @@ a {
         margin: 0.5em 0;
     }
 
-    input:focus {
+    input:focus, textarea:focus {
         outline: none;
     }
 
@@ -114,18 +115,37 @@ a {
         display: grid;
         grid-template-columns: 1fr 1fr;
     }
+
+
 }
 
-input {
+.hidden {
+    display: none !important;
+}
+
+.vertical > * {
+    display: block;
+}
+
+textarea {
+    resize: none;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+input, textarea {
     display: block;
     padding: 0.4em;
     border-radius: 0.5em;
     border: none;
     font-family: "Poppins", sans-serif;
-    max-width: 20em;
-    min-width: 200px;
     width: 100%;
 }
+
+input {
+    max-width: 20em;
+}
+
 
 @mixin button {
     cursor: pointer;
@@ -215,4 +235,33 @@ button[type="submit"], .btn-highlight {
 .button-group {
     display: flex;
     gap: 1em;
+}
+
+.ribbon {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h3 {
+        margin: 1em 0;
+    }
+
+    #action {
+        display: flex;
+        background-color: var(--grey);
+        border-radius: 0.4em;
+        padding: 0.2em 0.5em;
+        gap: 0.3em;
+        font-size: 1em;
+        cursor: pointer;
+    }
+}
+
+.ql-editor img {
+    max-width: 85vh !important;
+    object-fit: contain;
+}
+
+.hidden {
+    display: none !important;
 }

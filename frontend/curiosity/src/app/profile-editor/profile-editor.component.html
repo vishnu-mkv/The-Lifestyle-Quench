@@ -2,7 +2,7 @@
     <h2>Edit Profile</h2>
 
     <div class="center">
-        <img (click)="edit.profile_pic = true; popup.open('profile-pic-upload');" [src]="updateInstance.profile_pic"
+        <img (click)="edit.profile_pic = true; popup.open('image-upload');" [src]="updateInstance.profile_pic"
              alt="" id="profile-pic">
     </div>
 
@@ -15,14 +15,18 @@
         <input [(ngModel)]="updateInstance.profile_pic" class="hidden" name="profile_pic" type="text">
         <div class="button-group center">
             <button type="submit">Save changes</button>
-            <button class="btn-dark">Reset</button>
+            <button (click)="resetForm()" class="btn-dark" type="button">Reset</button>
         </div>
     </form>
 </section>
 
-<popup id="profile-pic-upload">
+<popup id="image-upload">
     <ng-container *ngIf="edit.profile_pic">
-        <app-profile-image-cropper (imageSetter)="imageUploaded($event)"
-                                   [src]="updateInstance.profile_pic"></app-profile-image-cropper>
+        <app-image-cropper-uploader
+            (imageSetter)="imageUploaded($event)"
+            [aspectRatios]="[[1,1]]"
+            [src]="updateInstance.profile_pic"
+            url="upload/images/profile-pic/">
+        </app-image-cropper-uploader>
     </ng-container>
 </popup>

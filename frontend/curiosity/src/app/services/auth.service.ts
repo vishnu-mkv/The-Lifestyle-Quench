@@ -3,8 +3,9 @@ import {Injectable} from '@angular/core';
 import {apiURL} from "../../environments/environment";
 import {BehaviorSubject, Observable, ReplaySubject} from "rxjs";
 import {share, tap} from "rxjs/operators";
-import {Profile, userRegistration, writerProfile} from "../interfaces";
+import {Profile, userRegistration, WriterApplicationResponse, writerProfile} from "../interfaces";
 import {Router} from "@angular/router";
+import {writerApplicationPending} from '../interfaces';
 
 interface UserToken {
     token: string,
@@ -53,11 +54,6 @@ interface changePassword {
     message: string
 }
 
-interface profileImageUpload {
-    success: boolean,
-    url: string
-}
-
 @Injectable({
     providedIn: 'root'
 })
@@ -100,7 +96,21 @@ export class AuthService {
         localStorage.setItem('token', "");
         localStorage.setItem('expiresAt', "");
         localStorage.setItem('profile', "");
+        localStorage.setItem('writer', "");
         this.loginSubject.next(false);
+        this.profileSubject.next({
+            profile_pic: "",
+            user: {
+                first_name: "",
+                last_name: "",
+                writer: false,
+                admin: false,
+                staff: false,
+                active: false,
+                date_created: "",
+                email: ""
+            }
+        });
         redirect && this.router.navigateByUrl("/");
     }
 
@@ -182,14 +192,28 @@ export class AuthService {
         return this.http.post<changePassword>(apiURL + 'api/users/change-password/', {email, password, new_password});
     }
 
-    uploadProfileImage(image: string) {
-        let form = new FormData();
-        form.append('image', image);
-        return this.http.post<profileImageUpload>(apiURL + 'upload/images/profile-pic/', form);
-    }
-
     updateProfile(first_name: string, last_name: string, profile_pic: string) {
         return this.http.patch(apiURL + 'api/users/profile/', {first_name, last_name, profile_pic});
+    }
+
+    checkActiveWriterApplication() {
+        return this.http.get<{ 'application': boolean }>(apiURL + 'api/users/apply/pending/');
+    }
+
+    getActiveWriterApplication() {
+        return this.http.get<writerApplicationPending>(apiURL + 'api/users/apply/');
+    }
+
+    updateWriterApplication(bio: string, writings: string) {
+        return this.http.patch(apiURL + 'api/users/apply/', {bio, writings});
+    }
+
+    createWriterApplication(bio: string, writings: string) {
+        return this.http.post(apiURL + 'api/users/apply/', {bio, writings});
+    }
+
+    getWriterApplicationHistory() {
+        return this.http.get<WriterApplicationResponse[]>(apiURL + 'api/users/apply/history/');
     }
 }
 

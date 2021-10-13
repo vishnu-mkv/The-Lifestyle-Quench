@@ -24,10 +24,10 @@ def post_thumbnail_upload_view(request):
     if not request.user.writer:
         return Response({request.user.get_full_name: 'Unauthorized'}, status.HTTP_401_UNAUTHORIZED)
 
-    serializer = PostThumbnailSerializer(data=request.FILES)
+    serializer = PostThumbnailSerializer(data=request.data)
     if serializer.is_valid():
         instance = serializer.save()
-        return Response({'image': request.build_absolute_uri(instance.image.url)})
+        return Response({'url': request.build_absolute_uri(instance.image.url), 'success': True})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -37,8 +37,8 @@ def post_image_upload_view(request):
     if not request.user.writer:
         return Response({request.user.get_full_name: 'Unauthorized'}, status.HTTP_401_UNAUTHORIZED)
 
-    serializer = PostImageSerializer(data=request.FILES)
+    serializer = PostImageSerializer(data=request.data)
     if serializer.is_valid():
         instance = serializer.save()
-        return Response({'image': request.build_absolute_uri(instance.image.url)})
+        return Response({'url': request.build_absolute_uri(instance.image.url), 'success': True})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -50,3 +50,39 @@ export interface InputEdit {
     value: string,
     onEdit: boolean,
 }
+
+export interface WriterApplicationResponse {
+    email: string,
+    user: string,
+    approved: boolean | null,
+    submitted_on: string,
+    approved_by: string | null,
+    bio: string,
+    writings: string
+}
+
+export interface writerApplicationPending {
+    application: boolean,
+    data: WriterApplicationResponse
+}
+
+export class editInput {
+    label = "";
+    id = "";
+    value = "";
+    onEdit = false;
+
+    constructor(label = "", id = "", value = "", onEdit = false) {
+        this.label = label;
+        this.id = id;
+        this.value = value;
+        this.onEdit = onEdit;
+    }
+}
+
+export interface postEdit {
+    title: string,
+    summary: string,
+    content: string,
+    thumbnail: string
+}

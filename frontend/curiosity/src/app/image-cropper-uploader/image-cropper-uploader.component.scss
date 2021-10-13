@@ -1,0 +1,40 @@
+#image-uploader {
+    position: relative;
+
+    .loading {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        place-items: center;
+        background-color: rgba(0, 0, 0, 0.64);
+    }
+
+    img {
+        max-height: 80vh !important;
+        object-fit: contain !important;
+    }
+
+    .active {
+        color: var(--greene);
+    }
+
+    .ratios > button {
+        padding: 0.2em 0.8em;
+        font-weight: 500;
+    }
+
+
+    #no-image {
+        min-height: 200px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        color: var(--info);
+    }
+}
+
+.grid {
+    display: grid;
+}

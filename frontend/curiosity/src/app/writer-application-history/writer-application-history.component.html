@@ -1,0 +1,28 @@
+<section class="width-control" id="applications">
+    <h2>Your writer applications</h2>
+    <div *ngFor="let app of data" class="container">
+        <p>Email: <span>{{app.email}}</span></p>
+        <p>Submitted on: <span>{{app.submitted_on | date:'short'}}</span></p>
+        <p>Approved:
+            <span>{{app.approved == null ? 'Pending' : app.approved ? 'Yes' : 'No'}}</span>
+        </p>
+        <p>Approved by: <span>{{app.approved_by == null ? '-' : app.approved_by}}</span></p>
+        <p>Bio: <span (click)="bio=app.bio;popup.open('bio')"
+                      class="pop-able">{{app.bio.length < 30 ? app.bio : (app.bio | slice:0:30) + '...'}}</span></p>
+        <p>Writings: <span (click)="writings=app.writings; popup.open('writings')"
+                           class="pop-able">{{app.writings.length < 30 ? app.writings : (app.writings | slice:0:30) + '...'}}</span>
+        </p>
+    </div>
+</section>
+
+<popup id="bio">
+    <h3>Bio</h3>
+    <p>{{bio}}</p>
+    <button (click)="popup.close('bio')" class="btn-dark">Close</button>
+</popup>
+
+<popup id="writings">
+    <h3>Writings</h3>
+    <p>{{writings}}</p>
+    <button (click)="popup.close('writings')" class="btn-dark">Close</button>
+</popup>

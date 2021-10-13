@@ -12,7 +12,12 @@ export class MessageService {
     constructor() {
     }
 
-    showMessage(message: string, type: string) {
+    showMessage(message: string | null, type: string) {
+        if (message == null) {
+            if (type === "error") message = "Something went wrong";
+            else message = "";
+        }
+
         let obj = new Message(message, type);
         this.messages.push(obj);
         setTimeout(() => {

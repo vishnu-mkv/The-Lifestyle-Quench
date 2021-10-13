@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {apiURL} from "../../environments/environment";
 import {Observable} from "rxjs";
-import {post} from "../interfaces";
+import {post, postEdit} from "../interfaces";
 import {AuthService} from "./auth.service";
 
 
@@ -26,8 +26,9 @@ export class PostsService {
     constructor(private http: HttpClient, private auth: AuthService) {
     }
 
-    getWriterPosts(): Observable<any> {
-        return this.http.get<post[]>(apiURL + 'api/users/posts');
+    getWriterPosts(): Observable<any> | null {
+        if (this.auth.isAuthenticated()) return this.http.get<post[]>(apiURL + 'api/users/posts');
+        return null;
     }
 
     unSubmit(slug: string) {
@@ -40,5 +41,9 @@ export class PostsService {
 
     deletePost(slug: string) {
         return this.http.delete<postDelete>(apiURL + `posts/${slug}/`);
+    }
+
+    createPost(post: postEdit) {
+        return this.http.post(apiURL + 'posts/', post);
     }
 }

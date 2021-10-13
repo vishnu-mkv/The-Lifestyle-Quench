@@ -10,8 +10,25 @@ import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
 import {ForgotPasswordComponent} from "./forgot-password/forgot-password.component";
 import {ChangePasswordComponent} from "./change-password/change-password.component";
 import {ProfileEditorComponent} from "./profile-editor/profile-editor.component";
+import {WriterApplicationComponent} from "./writer-application/writer-application.component";
+import {WriterApplicationHistoryComponent} from "./writer-application-history/writer-application-history.component";
+import {PostEditorComponent} from "./post-editor/post-editor.component";
 
 const routes: Routes = [
+    {
+        path: 'profile/apply-writer',
+        component: WriterApplicationComponent,
+        canActivate: [AuthGuardService],
+    },
+    {
+        path: 'posts/edit',
+        component: PostEditorComponent
+    },
+    {
+        path: 'profile/apply-writer/history',
+        component: WriterApplicationHistoryComponent,
+        canActivate: [AuthGuardService],
+    },
     {
         path: 'profile/change-password',
         component: ChangePasswordComponent,
@@ -41,7 +58,7 @@ const routes: Routes = [
     },
     {
         path: 'register',
-        component: RegisterComponent
+        component: RegisterComponent,
     },
     {
         path: '',

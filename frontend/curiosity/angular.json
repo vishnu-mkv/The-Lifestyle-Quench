@@ -25,15 +25,19 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
-            "scripts": []
+              "inlineStyleLanguage": "scss",
+              "assets": [
+                  "src/favicon.ico",
+                  "src/assets"
+              ],
+              "styles": [
+                  "src/styles.scss",
+                  "./node_modules/quill/dist/quill.core.css",
+                  "./node_modules/quill/dist/quill.snow.css"
+              ],
+              "scripts": [
+                  "./node_modules/quill/dist/quill.core.js"
+              ]
           },
           "configurations": {
             "production": {

@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit {
     isWriter: boolean = false;
     posts: post[] = [];
     deleteId = "";
+    hasPendingApplication = false;
 
     constructor(private auth: AuthService, private postService: PostsService,
                 private messages: MessageService, public popupService: PopupService) {
@@ -27,16 +28,22 @@ export class ProfileComponent implements OnInit {
                 this.isWriter = data.user.writer;
                 if (this.isWriter) {
                     this.loadWriterPosts();
+                } else {
+                    this.auth.checkActiveWriterApplication().subscribe(
+                        data => this.hasPendingApplication = data.application,
+                        err => messages.showMessage("Failed to fetch your writer application status", "error")
+                    )
                 }
             }
         )
     }
 
     ngOnInit(): void {
+        this.auth.fetchProfile();
     }
 
     loadWriterPosts() {
-        this.postService.getWriterPosts().subscribe(
+        this.postService.getWriterPosts()?.subscribe(
             data => {
                 this.posts = data;
             },

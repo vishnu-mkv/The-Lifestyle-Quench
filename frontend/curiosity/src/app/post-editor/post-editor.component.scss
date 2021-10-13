@@ -1,0 +1,105 @@
+.ql-snow {
+
+    font-family: "Poppins", sans-serif !important;
+
+    .ql-picker {
+        color: var(--dark-white) !important;
+    }
+
+    .ql-picker-options {
+        background-color: var(--grey) !important;
+    }
+
+    .ql-stroke {
+        stroke: var(--dark-white) !important;
+    }
+
+    .ql-fill {
+        fill: var(--dark-white) !important;
+    }
+
+    .ql-active .ql-stroke {
+        stroke: var(--greene) !important;
+    }
+
+    .ql-active .ql-fill {
+        fill: var(--greene) !important;
+    }
+}
+
+.ql-editor.ql-blank::before {
+    color: var(--dark-white) !important;
+}
+
+#editor {
+    margin-top: 1em;
+    display: grid;
+    padding: 1em;
+
+    & > * {
+        margin: 0.3em 0;
+    }
+
+    #thumbnail {
+        display: grid;
+        place-items: center;
+        width: 100%;
+        margin: 1em 0;
+
+        p {
+            color: var(--error);
+            padding: 1em;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        img {
+            object-fit: contain;
+            max-width: 75%;
+            margin: auto;
+        }
+    }
+
+    textarea {
+        background-color: transparent;
+        outline: none;
+        color: var(--whitey);
+        text-align: center;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    #title {
+        font-size: 2.2em;
+        font-weight: 500;
+    }
+
+    #summary {
+        font-weight: 300;
+        color: var(--dark-white);
+        font-size: 1em;
+    }
+
+    quill-editor {
+
+        .ql-toolbar, .ql-container {
+            border: 1px solid var(--light-gray);
+        }
+
+        .ql-toolbar {
+            margin: 0.6em 0;
+            padding: 8px 0 !important;
+            border-radius: 0.5em;
+        }
+
+        .ql-container {
+            margin: 2em 0;
+            padding: 8px;
+        }
+
+        .ql-editor {
+            padding: 0;
+        }
+    }
+}
+
