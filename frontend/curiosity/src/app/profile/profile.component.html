@@ -40,26 +40,27 @@
     </div>
 
     <div *ngIf="isWriter" id="posts">
-        <div class="ribbon">
+        <a [routerLink]="['/posts/new/edit']" class="ribbon">
             <h3>Your posts</h3>
             <div id="action">
                 <mat-icon>add</mat-icon>
                 <span>New Post</span></div>
-        </div>
+        </a>
         <div class="container">
             <div *ngFor="let post of posts" class="postbox">
-                <div class="post">
+                <a [routerLink]="['/posts', post.slug]" class="post" style="cursor: pointer">
                     <img [src]="post.thumbnail" alt="" class="thumbnail">
                     <div class="text">
                         <h4>{{post.title}}</h4>
                         <p>{{shortenString(post.summary, 100)}}</p>
                     </div>
-                </div>
+                </a>
                 <div class="toolbar">
-                    <p *ngIf="post.status == 'D'  || post.status == 'R'" class="tool-option">
+                    <a *ngIf="post.status == 'D'  || post.status == 'R'" [routerLink]="['/posts', post.slug, 'edit']"
+                       class="tool-option">
                         <mat-icon class="material-icons-outlined">border_color</mat-icon>
                         Edit
-                    </p>
+                    </a>
                     <p (click)="submitPost(post)" *ngIf="post.status == 'D' || post.status == 'R'" class="tool-option">
                         <mat-icon class="material-icons-outlined">approval</mat-icon>
                         Submit
@@ -92,7 +93,7 @@
     <h3>Delete Post?</h3>
     <p>Are you sure you want to delete this post? This Action is irreversible.</p>
     <div class="popup-buttons">
-        <button (click)="deletePost()" class="btn-highlight">Confirm</button>
+        <button (click)="deletePost()" class="btn-highlight delete">Confirm</button>
         <button (click)="popupService.close('confirm-delete')" class="btn-dark">Cancel</button>
     </div>
 </popup>

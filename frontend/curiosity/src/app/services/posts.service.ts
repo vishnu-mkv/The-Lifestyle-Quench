@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {apiURL} from "../../environments/environment";
 import {Observable} from "rxjs";
-import {post, postEdit} from "../interfaces";
+import {post} from "../interfaces";
 import {AuthService} from "./auth.service";
 
 
@@ -43,7 +43,12 @@ export class PostsService {
         return this.http.delete<postDelete>(apiURL + `posts/${slug}/`);
     }
 
-    createPost(post: postEdit) {
-        return this.http.post(apiURL + 'posts/', post);
+    savePost(create: boolean, post: { summary: string; thumbnail: string; title: string; content: string; slug: string }, id: string = "") {
+        if (create) return this.http.post<post>(apiURL + 'posts/', post);
+        return this.http.put<post>(apiURL + 'posts/' + id + '/', post)
+    }
+
+    getPost(slug: string) {
+        return this.http.get<post>(apiURL + 'posts/' + slug + '/');
     }
 }

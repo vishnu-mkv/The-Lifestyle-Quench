@@ -1,32 +1,85 @@
-<section class="width-control" id="editor">
+<section [class]="preview ? 'hidden': ''" class="width-control postview" id="editor">
+    <form #postForm="ngForm" (ngSubmit)="saveChanges(postForm)">
 
-    <form #postForm="ngForm" (ngSubmit)="createPost(postForm)">
-        <textarea [(ngModel)]="postInstance.title" [placeholder]=titlePlaceholder cdkTextareaAutosize
-                  class="width-control"
-                  id="title" name="title" required></textarea>
-        <textarea [(ngModel)]="postInstance.summary" [placeholder]="summaryPlaceholder" cdkTextareaAutosize
-                  class="width-control"
-                  id="summary" name="summary" required></textarea>
-        <div (click)="popup.open('thumbnail-upload')" id="thumbnail">
-            <img [hidden]="postInstance.thumbnail === ''" [src]="postInstance.thumbnail" alt="">
-            <p *ngIf="postInstance.thumbnail === ''">No thumbnail</p>
+        <div class="group">
+            <textarea [(ngModel)]="postInstance.title" [placeholder]=titlePlaceholder cdkTextareaAutosize
+                      class="width-control title" id="title"
+                      minlength="10" name="title" oninput="this.style.height = this.scrollHeight + 'px'"
+                      required></textarea>
+
+            <textarea [(ngModel)]="postInstance.summary" [placeholder]="summaryPlaceholder" cdkTextareaAutosize
+                      class="width-control summary"
+                      id="summary" name="summary" oninput="this.style.height = this.scrollHeight + 'px'"
+                      required></textarea>
+        </div>
+
+        <div class="thumbnail">
+
+            <img (click)="popup.open('thumbnail-upload')" [hidden]="postInstance.thumbnail === ''"
+                 [src]="postInstance.thumbnail" alt="" class="width-control">
+            <p (click)="popup.open('thumbnail-upload')" *ngIf="postInstance.thumbnail === ''">No thumbnail</p>
             <input [(ngModel)]="postInstance.thumbnail" class="hidden" name="thumbnail" required type="text">
         </div>
+
+        <div class="actions">
+            <h3>Actions</h3>
+            <div class="action-bar">
+                <div class="col col-1">
+                    <p>Options</p>
+                    <button *ngIf="create">Create</button>
+                    <button *ngIf="!create" [disabled]="saving">{{!saving ? 'Save' : 'saving...'}}</button>
+                    <button (click)="preview = true" type="button">Preview</button>
+                    <button (click)="popup.open('discard')" class="delete" type="button">Discard</button>
+                </div>
+                <div [hidden]="create" class="col col-2" id="auto-save">
+                    <div class="action-status">
+                        <p>Auto Save : </p>
+                        <span>{{autoSave ? 'Enabled' : 'Disabled'}}</span>
+                    </div>
+                    <button (click)="autoSave=!autoSave" type="button">{{autoSave ? 'Disable' : 'Enable'}}</button>
+                </div>
+                <div class="col col-3">
+                    <div class="action-status">
+                        <p>Status : </p>
+                        <span
+                            class="color">{{postInstance.status == 'S' ? 'Submitted' : create ? 'Not Saved' : 'Draft'}}</span>
+                    </div>
+                    <button (click)="submitPost()" *ngIf="!create && postInstance.status === 'D'"
+                            type="button">Submit
+                    </button>
+                    <button *ngIf="postInstance.status == 'S'" type="button">Unsubmit</button>
+                </div>
+                <div class="col col-4">
+                    <p>Delete Post</p>
+                    <button (click)="popup.open('confirm-delete')" *ngIf="postInstance.status !== 'P'" class="delete"
+                            type="button">Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <quill-editor
+            [styles]="{
+            fontFamily: ['Poppins', 'sans-serif'],
+            fontSize: '1em',
+            minHeight: '200px',
+            lineHeight: '24px',
+            color: '#c1bfbf'
+        }"
             (onEditorCreated)="getEditorInstance($event)"
             [(ngModel)]="postInstance.content"
             [modules]="modules"
             [required]="true"
-            [styles]="{
-            fontFamily: ['Poppins', 'sans-serif'],
-            fontSize: '1em',
-            height: 'fit-content',
-            lineHeight: 1.7
-        }"
+            [theme]="'bubble'"
+            scrollingContainer="body"
             name="content"
         ></quill-editor>
-        <button class="btn-highlight">Save Post</button>
     </form>
+</section>
+
+<section *ngIf="preview" class="width-control" id="preview">
+    <button (click)="preview=false" class="btn-highlight exit-btn">Exit</button>
+    <app-postview [post]="postInstance"></app-postview>
 </section>
 
 
@@ -41,9 +94,27 @@
 <popup id="thumbnail-upload">
     <app-image-cropper-uploader
         (imageSetter)="thumbnailUploaded($event)"
-        [aspectRatios]="[[4,3],[16,9]]"
+        [aspectRatios]="[[1,1],[3,4],[4,3],[16,9]]"
         [src]="postInstance.thumbnail"
         popupId="thumbnail-upload"
         url="upload/images/post/thumbnail/">
     </app-image-cropper-uploader>
+</popup>
+
+<popup id="confirm-delete">
+    <h3>Delete Post?</h3>
+    <p>Are you sure you want to delete this post? This Action is irreversible.</p>
+    <div class="popup-buttons">
+        <button (click)="deletePost()" class="btn-highlight delete">Confirm</button>
+        <button (click)="popup.close('confirm-delete')" class="btn-dark">Cancel</button>
+    </div>
+</popup>
+
+<popup id="discard">
+    <h3>Discard Changes?</h3>
+    <p>All your changes will be lost. This Action is irreversible. Do you want to continue?</p>
+    <div class="popup-buttons">
+        <button (click)="reset();popup.close('discard')" class="btn-highlight delete">Discard</button>
+        <button (click)="popup.close('discard')" class="btn-dark">Cancel</button>
+    </div>
 </popup>

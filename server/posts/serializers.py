@@ -41,23 +41,25 @@ class PostSummarySerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    thumbnail = ReadWriteSerializerMethodField('get_thumbnail', required=False)
+    thumbnail = ReadWriteSerializerMethodField('get_thumbnail', required=True)
     writer = serializers.CharField(source='writer.get_full_name', read_only=True)
-    content = ReadWriteSerializerMethodField('get_content', required=False)
+    writer_id = serializers.CharField(source='writer.writerprofile.writer_name', read_only=True)
+    content = ReadWriteSerializerMethodField('get_content', required=True)
+    writer_profile_pic = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
         fields = '__all__'
         extra_kwargs = {
+            'slug': {
+                'read_only': True
+            },
             'last_edited': {
                 'read_only': True
             },
             'status': {
                 'read_only': True
-            },
-            'slug': {
-                'read_only': True
-            },
+            }
         }
 
     def __init__(self, *args, **kwargs):
@@ -73,10 +75,14 @@ class PostSerializer(serializers.ModelSerializer):
         request = self.context['request']
         return obj.content_html(request)
 
+    def get_writer_profile_pic(self, obj):
+        request = self.context['request']
+        return request.build_absolute_uri(obj.writer.userprofile.profile_pic.image.url)
+
     def create(self, validated_data):
         validated_data.pop('thumbnail', None)
         instance = Post.objects.create(**validated_data, writer=self.context['request'].user,
-                                       slug=urlify(validated_data['title'].lower()),
+                                       slug=urlify(validated_data['title']),
                                        thumbnail=self.thumbnail_image_instance)
         instance.save()
         for image in self.content_image_set_recieved:
@@ -92,6 +98,7 @@ class PostSerializer(serializers.ModelSerializer):
         instance.title = validated_data['title']
         instance.content = validated_data['content']
         instance.thumbnail = self.thumbnail_image_instance
+        instance.summary = validated_data['summary']
         instance.save()
 
         original_set = PostImage.objects.filter(post=instance)
@@ -111,18 +118,18 @@ class PostSerializer(serializers.ModelSerializer):
 
     def validate_thumbnail(self, field_dict):
         if not field_dict['thumbnail']:
-            return thumbnail
+            return field_dict
         response = validate_image_url(url=field_dict['thumbnail'], Model=PostThumbnail,
                                       request=self.context['request'])
         self.thumbnail_image_instance = response
         return field_dict
 
     def validate_title(self, title):
-        if self.instance and urlify(title).lower() == self.instance.slug:
+        if self.instance and urlify(title) == self.instance.slug:
             return title
 
         try:
-            Post.objects.get(slug=urlify(title).lower())
+            Post.objects.get(slug=urlify(title))
             raise serializers.ValidationError("A post with this title already exists")
         except Post.DoesNotExist:
             return title

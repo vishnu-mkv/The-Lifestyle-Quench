@@ -1,99 +1,31 @@
-.ql-snow {
-
-    font-family: "Poppins", sans-serif !important;
-
-    .ql-picker {
-        color: var(--dark-white) !important;
-    }
-
-    .ql-picker-options {
-        background-color: var(--grey) !important;
-    }
-
-    .ql-stroke {
-        stroke: var(--dark-white) !important;
-    }
-
-    .ql-fill {
-        fill: var(--dark-white) !important;
-    }
-
-    .ql-active .ql-stroke {
-        stroke: var(--greene) !important;
-    }
-
-    .ql-active .ql-fill {
-        fill: var(--greene) !important;
-    }
-}
-
 .ql-editor.ql-blank::before {
     color: var(--dark-white) !important;
 }
 
 #editor {
-    margin-top: 1em;
-    display: grid;
-    padding: 1em;
 
-    & > * {
-        margin: 0.3em 0;
-    }
-
-    #thumbnail {
+    form {
         display: grid;
-        place-items: center;
+        gap: 1.4em;
         width: 100%;
-        margin: 1em 0;
-
-        p {
-            color: var(--error);
-            padding: 1em;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        img {
-            object-fit: contain;
-            max-width: 75%;
-            margin: auto;
-        }
     }
 
-    textarea {
-        background-color: transparent;
-        outline: none;
-        color: var(--whitey);
-        text-align: center;
-        padding: 0;
-        overflow: hidden;
-    }
-
-    #title {
-        font-size: 2.2em;
-        font-weight: 500;
-    }
-
-    #summary {
-        font-weight: 300;
-        color: var(--dark-white);
-        font-size: 1em;
+    .thumbnail {
+        cursor: pointer;
     }
 
     quill-editor {
 
-        .ql-toolbar, .ql-container {
+        .ql-tooltip {
             border: 1px solid var(--light-gray);
-        }
-
-        .ql-toolbar {
-            margin: 0.6em 0;
-            padding: 8px 0 !important;
             border-radius: 0.5em;
         }
 
+        .ql-toolbar {
+            padding: 4px 0 !important;
+        }
+
         .ql-container {
-            margin: 2em 0;
             padding: 8px;
         }
 
@@ -103,3 +35,85 @@
     }
 }
 
+.exit-btn {
+    position: fixed;
+    bottom: 1em;
+    right: 2.5em;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.action-bar {
+    display: grid;
+    font-size: 0.9em;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1.5em;
+    grid-template-columns: repeat(4, 1fr);
+
+    p {
+        margin: 0;
+    }
+
+    button {
+        outline: none;
+        border: 1px solid var(--light-gray);
+        border-radius: 0.3em;
+        font-family: "Poppins", sans-serif;
+        padding: 0.1em 0.4em;
+        font-size: 0.9em;
+        margin: 0.8em 0.5em 0.5em 0;
+        cursor: pointer;
+        background-color: var(--dark-green);
+        color: var(--white);
+    }
+
+    .delete {
+        background-color: var(--red);
+    }
+
+    .action-status {
+        display: flex;
+        gap: 0.8em;
+
+        span {
+            color: var(--greene);
+        }
+    }
+
+    .col {
+        background-color: var(--light-gray);
+        padding: 0.5em 1em;
+        border-radius: 0.4em;
+        min-width: 100px;
+        flex-grow: 1;
+    }
+}
+
+.actions {
+    padding: 0 0.5em 0.5em;
+    border-radius: 0.3em;
+    border: 1px solid var(--light-gray);
+
+    h3 {
+        margin: 0.8em 0;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .action-bar {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .action-bar {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 250px) {
+    .action-status {
+        display: block !important;
+    }
+}

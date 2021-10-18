@@ -1,0 +1,24 @@
+<section *ngIf="post" class="postview width-control" id="PostContainer">
+    <div class="group">
+        <p class="title text">{{post.title}}</p>
+        <p class="summary text">{{post.summary}}</p>
+    </div>
+
+
+    <div class="thumbnail">
+        <img [src]="post.thumbnail" alt="">
+    </div>
+
+    <div class="writer">
+        <img [src]="post.writer_profile_pic" alt="" id="profile-pic">
+        <div class="info">
+            <p class="name">{{post.writer}}</p>
+            <p class="date">On {{post.last_edited | date:'MMM d, y, h:mm a'}}</p>
+        </div>
+    </div>
+
+    <div class="ql-container ql-bubble" style="border-width: 0;font-size:1em;">
+        <div [innerHTML]="transformHtml(post.content)" class="ql-editor content">
+        </div>
+    </div>
+</section>

@@ -69,7 +69,8 @@ export class AuthService {
 
     constructor(private http: HttpClient, private router: Router) {
         if (this.isAuthenticated()) {
-            this.profileSubject.next(JSON.parse(localStorage.getItem('profile') as string));
+            this.profileSubject.next(JSON.parse(localStorage.getItem('profile') as string))
+            this.writerSubject.next(JSON.parse(localStorage.getItem('writer') as string));
         }
     }
 
@@ -129,14 +130,18 @@ export class AuthService {
         return localStorage.getItem('token');
     }
 
+    profileObserver(): Observable<Profile> {
+        return this.http.get<Profile>(apiURL + 'api/users/profile/');
+    }
+
     fetchProfile() {
-        this.http.get<Profile>(apiURL + 'api/users/profile/').subscribe({
-            next: data => {
+        this.profileObserver().subscribe(
+            (data: Profile) => {
                 localStorage.setItem('profile', JSON.stringify(data));
                 this.profileSubject.next(data as Profile);
                 if (data.user.writer) this.fetchWriterProfile();
             }
-        });
+        )
     }
 
     getProfile(): Observable<Profile> {
@@ -163,8 +168,8 @@ export class AuthService {
         return this.writerSource.pipe(share());
     }
 
-    private fetchWriterProfile() {
-        return this.http.get<writerProfile>(apiURL + 'api/users/writer-profile/').subscribe(
+    fetchWriterProfile() {
+        this.http.get<writerProfile>(apiURL + 'api/users/writer-profile/').subscribe(
             data => {
                 localStorage.setItem('writer', JSON.stringify(data));
                 this.writerSubject.next(data)

@@ -26,16 +26,28 @@ export interface userRegistration {
 }
 
 
-export interface post {
+interface postBase {
+    title: string,
+    summary: string,
+    thumbnail: string
+}
+
+export interface postEdit extends postBase {
+    content: string
+}
+
+export interface postSummary extends postBase {
     id: number,
     slug: string,
     status: string,
     last_edited: string,
-    summary: string,
-    thumbnail: string,
     writer: string,
-    title: string,
-    content: string
+    writer_id: string
+}
+
+export interface post extends postSummary {
+    content: string,
+    writer_profile_pic: string
 }
 
 export interface updateProfile {
@@ -80,9 +92,3 @@ export class editInput {
     }
 }
 
-export interface postEdit {
-    title: string,
-    summary: string,
-    content: string,
-    thumbnail: string
-}

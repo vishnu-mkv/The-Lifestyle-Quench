@@ -13,16 +13,14 @@ import {ProfileEditorComponent} from "./profile-editor/profile-editor.component"
 import {WriterApplicationComponent} from "./writer-application/writer-application.component";
 import {WriterApplicationHistoryComponent} from "./writer-application-history/writer-application-history.component";
 import {PostEditorComponent} from "./post-editor/post-editor.component";
+import {PostviewComponent} from "./postview/postview.component";
+import {WriterGuard} from "./writer.guard";
 
 const routes: Routes = [
     {
         path: 'profile/apply-writer',
         component: WriterApplicationComponent,
         canActivate: [AuthGuardService],
-    },
-    {
-        path: 'posts/edit',
-        component: PostEditorComponent
     },
     {
         path: 'profile/apply-writer/history',
@@ -59,6 +57,15 @@ const routes: Routes = [
     {
         path: 'register',
         component: RegisterComponent,
+    },
+    {
+        path: 'posts/:id',
+        component: PostviewComponent
+    },
+    {
+        path: 'posts/:id/edit',
+        component: PostEditorComponent,
+        canActivate: [WriterGuard]
     },
     {
         path: '',

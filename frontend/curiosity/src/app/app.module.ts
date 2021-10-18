@@ -31,6 +31,8 @@ import {WriterApplicationComponent} from './writer-application/writer-applicatio
 import {WriterApplicationHistoryComponent} from './writer-application-history/writer-application-history.component';
 import {PostEditorComponent} from './post-editor/post-editor.component';
 import {TextFieldModule} from "@angular/cdk/text-field";
+import {PostviewComponent} from './postview/postview.component';
+import {PostsComponent} from './posts/posts.component';
 
 @NgModule({
     declarations: [
@@ -50,7 +52,9 @@ import {TextFieldModule} from "@angular/cdk/text-field";
         ImageCropperUploaderComponent,
         WriterApplicationComponent,
         WriterApplicationHistoryComponent,
-        PostEditorComponent
+        PostEditorComponent,
+        PostviewComponent,
+        PostsComponent
     ],
     imports: [
         BrowserModule,

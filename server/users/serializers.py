@@ -179,7 +179,6 @@ class EditProfileSerializer(serializers.Serializer):
         pass
 
     def validate_profile_pic(self, profile_pic):
-        print(profile_pic)
         response = validate_image_url(url=profile_pic, Model=ProfileImage,
                                       request=self.context['request'])
         self.profile_image_instance = response
@@ -202,6 +201,10 @@ class WriterProfileSerializer(serializers.ModelSerializer):
                 'required': True
             }
         }
+
+    def get_profile_pic(self, profile):
+        request = self.context.get('request')
+        return request.build_absolute_uri(profile.profile_pic.image.url)
 
 
 class WriterApplicationSerializer(serializers.ModelSerializer):
