@@ -33,6 +33,8 @@ import {PostEditorComponent} from './post-editor/post-editor.component';
 import {TextFieldModule} from "@angular/cdk/text-field";
 import {PostviewComponent} from './postview/postview.component';
 import {PostsComponent} from './posts/posts.component';
+import {PostItemComponent} from './post-item/post-item.component';
+import {PaginationComponent} from './pagination/pagination.component';
 
 @NgModule({
     declarations: [
@@ -54,7 +56,9 @@ import {PostsComponent} from './posts/posts.component';
         WriterApplicationHistoryComponent,
         PostEditorComponent,
         PostviewComponent,
-        PostsComponent
+        PostsComponent,
+        PostItemComponent,
+        PaginationComponent
     ],
     imports: [
         BrowserModule,

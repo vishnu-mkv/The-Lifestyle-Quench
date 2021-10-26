@@ -20,7 +20,6 @@
 
 <ng-template #accview>
     <div id="acc-view">
-        <!--        <span>{{name}}</span>-->
         <img (click)="toggleDropDown()" [src]="picUrl" alt="profile-pic" id="profile-pic"/>
         <div [ngClass]="(showDropdown | async)?'dropdown-show':''" class="dropdown">
             <a routerLink="/profile">Profile</a>

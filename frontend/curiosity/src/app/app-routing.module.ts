@@ -5,7 +5,7 @@ import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
 import {ActivateAccountComponent} from "./activate-account/activate-account.component";
 import {ProfileComponent} from "./profile/profile.component";
-import {AuthGuardService} from "./services/auth-guard.service";
+import {AuthGuardService} from "./guards/auth-guard.service";
 import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
 import {ForgotPasswordComponent} from "./forgot-password/forgot-password.component";
 import {ChangePasswordComponent} from "./change-password/change-password.component";
@@ -14,7 +14,8 @@ import {WriterApplicationComponent} from "./writer-application/writer-applicatio
 import {WriterApplicationHistoryComponent} from "./writer-application-history/writer-application-history.component";
 import {PostEditorComponent} from "./post-editor/post-editor.component";
 import {PostviewComponent} from "./postview/postview.component";
-import {WriterGuard} from "./writer.guard";
+import {WriterGuard} from "./guards/writer.guard";
+import {PostsComponent} from "./posts/posts.component";
 
 const routes: Routes = [
     {
@@ -59,13 +60,16 @@ const routes: Routes = [
         component: RegisterComponent,
     },
     {
-        path: 'posts/:id',
-        component: PostviewComponent
-    },
-    {
         path: 'posts/:id/edit',
         component: PostEditorComponent,
         canActivate: [WriterGuard]
+    },
+    {
+        path: 'posts/:id',
+        component: PostviewComponent
+    }, {
+        path: 'posts',
+        component: PostsComponent
     },
     {
         path: '',

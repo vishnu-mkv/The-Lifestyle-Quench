@@ -1,0 +1,16 @@
+.writer {
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+    margin: 1em 0 0;
+
+    .profile-pic {
+        width: 1em !important;
+        height: 1em !important;
+    }
+
+    p {
+        font-size: 0.78em;
+        font-weight: 300;
+    }
+}

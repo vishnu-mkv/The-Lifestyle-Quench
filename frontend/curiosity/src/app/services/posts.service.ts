@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {apiURL} from "../../environments/environment";
 import {Observable} from "rxjs";
-import {post} from "../interfaces";
+import {post, postSummary} from "../interfaces";
 import {AuthService} from "./auth.service";
 
 
@@ -16,6 +16,13 @@ interface postDelete {
     delete: boolean,
     message: string,
     slug: string
+}
+
+export interface postList {
+    results: postSummary[],
+    prev: string | null,
+    next: string | null,
+    count: number
 }
 
 @Injectable({
@@ -50,5 +57,9 @@ export class PostsService {
 
     getPost(slug: string) {
         return this.http.get<post>(apiURL + 'posts/' + slug + '/');
+    }
+
+    getPostList(pageNumber = 1) {
+        return this.http.get<postList>(apiURL + 'posts/?page=' + pageNumber);
     }
 }

@@ -34,6 +34,12 @@ export class NavbarComponent implements OnInit {
                 this.picUrl = value?.profile_pic;
             }
         });
+        nav.getShowNav().subscribe(
+            show => {
+                if (show) document.body.style.overflowY = "hidden";
+                else document.body.style.overflowY = "scroll";
+            }
+        )
     }
 
     ngOnInit(): void {

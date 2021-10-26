@@ -1,0 +1,14 @@
+<div *ngIf="config && getPageNumbers() as pageNumbers" class="pagination">
+    <button (click)="pageEmitter.emit(config.current-1)" *ngIf="config.current-1 > 0"
+            class="page btn-dark">Prev
+    </button>
+    <ng-container *ngFor="let page of pageNumbers">
+        <button (click)="pageEmitter.emit(page)" *ngIf="page !== -1"
+                [ngClass]="page === config.current ? 'current':''"
+                class="page btn-dark">{{page}}</button>
+        <span *ngIf="page === -1" class="fill">. . .</span>
+    </ng-container>
+    <button (click)="pageEmitter.emit(config.current+1)" *ngIf="config.current+1 <= lastPage"
+            class="page btn-dark">Next
+    </button>
+</div>

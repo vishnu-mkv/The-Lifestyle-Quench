@@ -1,19 +1,20 @@
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import get_object_or_404
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ViewSet, GenericViewSet
 
 from .models import Post, Submission
-# Create your views here.
 from .serializers import PostSerializer, SubmissionSerializer, PostSummarySerializer
+# Create your views here.
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def writerPostListView(request):
+def writer_post_list_view(request):
 
     if not request.user.writer:
         return Response({"message": "Not a writer"}, status.HTTP_403_FORBIDDEN)
@@ -22,12 +23,16 @@ def writerPostListView(request):
     serializer = PostSummarySerializer(queryset, many=True, context={'request': request})
     return Response(serializer.data)
 
-class PostViewSet(ViewSet):
+
+class PostViewSet(GenericViewSet):
+
+    pagination_class = PageNumberPagination
 
     def list(self, request):
-        queryset = Post.objects.filter(status='P')
-        serializer = PostSerializer(queryset, many=True, context={'request': request})
-        return Response(serializer.data)
+        queryset = Post.objects.filter(status='P').order_by('-last_edited')
+        page = self.paginate_queryset(queryset)
+        serializer = PostSerializer(page, many=True, context={'request': request})
+        return self.get_paginated_response(serializer.data)
 
     def retrieve(self, request, pk):
         queryset = Post.objects.all()

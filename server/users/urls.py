@@ -1,13 +1,13 @@
 from django.urls import path
 
-from posts.views import writerPostListView
+from posts.views import writer_post_list_view
 from .views import *
 
 app_name = 'users'
 
 urlpatterns = [
     path('login/', ObtainExpiringAuthToken.as_view(), name='login'),
-    path('posts/', writerPostListView, name='writer-posts'),
+    path('posts/', writer_post_list_view, name='writer-posts'),
     path('register/', register_view, name='register'),
     path('activate/', activate_user_view, name='register'),
     path('apply/', writer_application_view, name='writer-apply'),

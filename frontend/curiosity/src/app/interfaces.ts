@@ -42,12 +42,12 @@ export interface postSummary extends postBase {
     status: string,
     last_edited: string,
     writer: string,
-    writer_id: string
+    writer_id: string,
+    writer_profile_pic: string
 }
 
 export interface post extends postSummary {
     content: string,
-    writer_profile_pic: string
 }
 
 export interface updateProfile {

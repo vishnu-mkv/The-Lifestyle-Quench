@@ -29,7 +29,8 @@
                     <button *ngIf="create">Create</button>
                     <button *ngIf="!create" [disabled]="saving">{{!saving ? 'Save' : 'saving...'}}</button>
                     <button (click)="preview = true" type="button">Preview</button>
-                    <button (click)="popup.open('discard')" class="delete" type="button">Discard</button>
+                    <button (click)="popup.open('discard')" *ngIf="!create" class="delete" type="button">Discard
+                    </button>
                 </div>
                 <div [hidden]="create" class="col col-2" id="auto-save">
                     <div class="action-status">
@@ -49,9 +50,9 @@
                     </button>
                     <button *ngIf="postInstance.status == 'S'" type="button">Unsubmit</button>
                 </div>
-                <div class="col col-4">
+                <div *ngIf="!create && postInstance.status !== 'P'" class="col col-4">
                     <p>Delete Post</p>
-                    <button (click)="popup.open('confirm-delete')" *ngIf="postInstance.status !== 'P'" class="delete"
+                    <button (click)="popup.open('confirm-delete')" class="delete"
                             type="button">Delete
                     </button>
                 </div>

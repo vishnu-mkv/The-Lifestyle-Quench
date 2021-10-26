@@ -40,21 +40,15 @@
     </div>
 
     <div *ngIf="isWriter" id="posts">
-        <a [routerLink]="['/posts/new/edit']" class="ribbon">
+        <a class="ribbon">
             <h3>Your posts</h3>
-            <div id="action">
+            <div [routerLink]="['/posts/new/edit']" class="action">
                 <mat-icon>add</mat-icon>
                 <span>New Post</span></div>
         </a>
         <div class="container">
             <div *ngFor="let post of posts" class="postbox">
-                <a [routerLink]="['/posts', post.slug]" class="post" style="cursor: pointer">
-                    <img [src]="post.thumbnail" alt="" class="thumbnail">
-                    <div class="text">
-                        <h4>{{post.title}}</h4>
-                        <p>{{shortenString(post.summary, 100)}}</p>
-                    </div>
-                </a>
+                <app-post-item [post]="post" [showWriter]="false"></app-post-item>
                 <div class="toolbar">
                     <a *ngIf="post.status == 'D'  || post.status == 'R'" [routerLink]="['/posts', post.slug, 'edit']"
                        class="tool-option">

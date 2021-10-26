@@ -1,0 +1,23 @@
+.pagination {
+    display: flex;
+    gap: 0.5em;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+
+    button {
+        padding: 0.15em 0.8em;
+    }
+
+    .page {
+        background-color: var(--light-gray);
+    }
+
+    .fill {
+        flex-shrink: 0;
+    }
+
+    .current {
+        background-color: var(--dark-green);
+    }
+}

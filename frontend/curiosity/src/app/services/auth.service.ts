@@ -119,7 +119,7 @@ export class AuthService {
 
         let token = localStorage.getItem('token');
         let expiresAt = localStorage.getItem('expiresAt');
-        if (!token || !expiresAt) return false;
+        if (!token || !expiresAt || token === "" || expiresAt === "") return false;
 
         let expiresDate = new Date(expiresAt);
         let now = new Date(new Date().toUTCString());

@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../services/auth.service";
 import {post, Profile} from "../interfaces";
 import {Observable} from "rxjs";
-import {MatIconModule} from '@angular/material/icon';
 import {PostsService} from "../services/posts.service";
 import {MessageService} from "../services/message.service";
 import {PopupService} from "../popup";
@@ -31,7 +30,7 @@ export class ProfileComponent implements OnInit {
                 } else {
                     this.auth.checkActiveWriterApplication().subscribe(
                         data => this.hasPendingApplication = data.application,
-                        err => messages.showMessage("Failed to fetch your writer application status", "error")
+                        () => messages.showMessage("Failed to fetch your writer application status", "error")
                     )
                 }
             }
@@ -49,11 +48,6 @@ export class ProfileComponent implements OnInit {
             },
             err => this.messages.showMessage(err.error.message, "error")
         )
-    }
-
-    shortenString(str: string, n: number) {
-        if (str.length <= n) return str;
-        return str.substr(0, n) + '...';
     }
 
     deleteSubmission(post: post) {

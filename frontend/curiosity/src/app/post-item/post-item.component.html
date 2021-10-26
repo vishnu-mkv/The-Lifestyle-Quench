@@ -1,0 +1,13 @@
+<div class="post">
+    <a [routerLink]="['/posts', post.slug]" class="post" style="cursor: pointer">
+        <img [src]="post.thumbnail" alt="" class="thumbnail">
+        <div class="text">
+            <h4>{{post.title}}</h4>
+            <p>{{shortenString(post.summary)}}</p>
+            <!--            <div class="writer" *ngIf="showWriter">-->
+            <!--                <img [src]="post.writer_profile_pic" alt="" class="profile-pic">-->
+            <!--                <p>{{post.writer}}</p>-->
+            <!--            </div>-->
+        </div>
+    </a>
+</div>

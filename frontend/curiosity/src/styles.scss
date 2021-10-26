@@ -200,12 +200,12 @@ button[type="submit"], .btn-highlight {
         display: flex;
         gap: 2em;
         align-items: center;
-        padding: 1em;
+        padding: 0.3em;
 
 
         .thumbnail {
-            height: 8em;
-            width: 10em;
+            aspect-ratio: 4/3;
+            width: 9.5em;
             object-fit: cover;
             border-radius: 0.2em;
             flex-shrink: 0;
@@ -214,11 +214,12 @@ button[type="submit"], .btn-highlight {
         .text {
             h4 {
                 margin: 0 0 0.2em;
+                font-size: 1.14em;
             }
 
             p {
                 margin: 0;
-                font-size: 0.96em;
+                font-size: 0.9em;
                 color: var(--dark-white);
             }
         }
@@ -226,7 +227,7 @@ button[type="submit"], .btn-highlight {
 
 }
 
-#profile-pic {
+#profile-pic, .profile-pic {
     border-radius: 50%;
     height: 6.5em;
     width: 6.5em;
@@ -243,12 +244,13 @@ button[type="submit"], .btn-highlight {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 
     h3 {
-        margin: 1em 0;
+        margin: 1em 3em 1.5em 0;
     }
 
-    #action {
+    .action {
         display: flex;
         background-color: var(--grey);
         border-radius: 0.4em;
@@ -282,4 +284,36 @@ button[type="submit"], .btn-highlight {
 
 .delete {
     background-color: var(--red);
+}
+
+@media screen and (max-width: 500px) {
+    .post {
+        flex-direction: column;
+
+        .thumbnail {
+            width: 80vw !important;
+        }
+
+        .text {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2em;
+
+            .writer {
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .ribbon {
+        flex-direction: column;
+    }
+}
+
+.ql-editor {
+    padding: 0 !important;
 }

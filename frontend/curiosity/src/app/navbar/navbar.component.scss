@@ -134,13 +134,17 @@
         display: flex !important;
     }
 
+    li {
+        padding-inline: 0 !important;
+    }
+
     #nav-container {
 
         #navbar {
             display: block;
 
             #left {
-                margin: 0.3em 1em 0.3em 0.5em;
+                margin: 0.3em 1em 0.3em 0;
             }
 
             #menu {
