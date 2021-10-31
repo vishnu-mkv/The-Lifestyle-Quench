@@ -8,4 +8,5 @@ users/__pycache__
 images/__pycache__
 posts/__pycache__
 curiosity/__pycache__
-secrets
+utils/__pycache__
+curiosity/secrets.py
