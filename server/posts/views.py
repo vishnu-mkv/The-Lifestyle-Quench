@@ -1,14 +1,14 @@
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import get_object_or_404
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.mixins import ListModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from rest_framework.viewsets import ViewSet, GenericViewSet
+from rest_framework.viewsets import GenericViewSet
 
 from .models import Post, Submission
-from .serializers import PostSerializer, SubmissionSerializer, PostSummarySerializer
+from .serializers import PostSerializer, PostSummarySerializer
 # Create your views here.
 
 
@@ -24,9 +24,9 @@ def writer_post_list_view(request):
     return Response(serializer.data)
 
 
-class PostViewSet(GenericViewSet):
-
-    pagination_class = PageNumberPagination
+class PostViewSet(ListModelMixin, GenericViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
 
     def list(self, request):
         queryset = Post.objects.filter(status='P').order_by('-last_edited')
@@ -60,6 +60,7 @@ class PostViewSet(GenericViewSet):
             return Response({request.user.get_full_name(): 'Unauthorized'}, status.HTTP_401_UNAUTHORIZED)
 
         serializer = PostSerializer(data=request.data, context={'request': request})
+
         if serializer.is_valid():
             instance = serializer.save()
             url = reverse('posts:post-detail', args=[instance.slug])
