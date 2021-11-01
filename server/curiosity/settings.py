@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 
-DEBUG = False
+DEBUG = True
 
 if DEBUG:
     from .secrets import *
@@ -157,9 +157,6 @@ USE_TZ = True
 
 STATIC_ROOT = Path.joinpath(BASE_DIR, 'static/')
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    Path.joinpath(BASE_DIR, "static/"),
-]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
