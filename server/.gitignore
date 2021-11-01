@@ -1,9 +1,6 @@
 venv/
 thelifestylequench/secrets.py
 db.sqlite3
-users/migrations
-images/migrations
-posts/migrations
 users/__pycache__
 images/__pycache__
 posts/__pycache__
