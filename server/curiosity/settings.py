@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 
-DEBUG = True
+DEBUG = False
 
 if DEBUG:
     from .secrets import *
