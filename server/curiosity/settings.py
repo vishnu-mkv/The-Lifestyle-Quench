@@ -32,7 +32,7 @@ SECRET_KEY = DJANGO_SECRET_KEY if DEBUG else os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = ['curio-sity.herokuapp.com']
+ALLOWED_HOSTS = ['curio-sity.herokuapp.com', 'localhost']
 
 # Application definition
 
