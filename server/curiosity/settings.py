@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 
-DEBUG = False
+DEBUG = True
 
 if DEBUG:
     from .secrets import *
@@ -32,7 +32,7 @@ SECRET_KEY = DJANGO_SECRET_KEY if DEBUG else os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = ['curio-sity.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = ['curio-sity.herokuapp.com', '127.0.0.1']
 
 # Application definition
 
