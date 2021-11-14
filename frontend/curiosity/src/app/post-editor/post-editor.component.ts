@@ -144,10 +144,12 @@ export class PostEditorComponent implements OnInit {
             content: this.postInstance.content, thumbnail: this.postInstance.thumbnail, slug: this.postInstance.slug
         }, this.postInstance.slug).subscribe(
             data => {
-                if (!passive) this.messages.showMessage(this.create ? "Post created." : "Changes saved", 'success');
+                if (!passive) {
+                    this.postInstance = data;
+                    this.messages.showMessage(this.create ? "Post created." : "Changes saved", 'success');
+                }
                 this.create = false;
                 this.reloadIfSlugChange(this.postInstance.slug, data.slug);
-                this.postInstance = data;
             },
             err => {
                 for (let field in err.error) {
