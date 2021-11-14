@@ -9,6 +9,7 @@ def validate_image_url(url, Model, request, default=True):
         return serializers.ValidationError("Invalid url")
 
     directory = Model._meta.get_field('image').upload_to
+    url = url[:url.find('?')]
     image_name = url.split('/')[-1]
 
     if default:
@@ -17,7 +18,7 @@ def validate_image_url(url, Model, request, default=True):
 
     try:
         image = Model.objects.get(image=f'{directory}/{image_name}')
-        if url != build_image_url(request, image):
+        if url != build_image_url(request, image).split('?')[0]:
             raise serializers.ValidationError("Invalid uri.")
         return image
     except Model.DoesNotExist:
