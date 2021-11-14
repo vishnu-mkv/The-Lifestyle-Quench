@@ -25,7 +25,7 @@ export class TokenInterceptor implements HttpInterceptor {
             request = request.clone({
                 setHeaders: {
                     Authorization: `Token ${this.auth.getToken()}`,
-                    AccessControlAllowOrigin: '*'
+                    AccessControlAllowOrigin: 'http://127.0.0.1:4200'
                 }
             });
         }
