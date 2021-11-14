@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {
     HttpRequest,
-    HttpResponse,
     HttpErrorResponse,
     HttpHandler,
     HttpEvent,
@@ -11,6 +10,7 @@ import {AuthService} from './services/auth.service';
 import {Observable, of, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {Router} from '@angular/router';
+
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -24,7 +24,8 @@ export class TokenInterceptor implements HttpInterceptor {
         if (this.auth.isAuthenticated()) {
             request = request.clone({
                 setHeaders: {
-                    Authorization: `Token ${this.auth.getToken()}`
+                    Authorization: `Token ${this.auth.getToken()}`,
+                    AccessControlAllowOrigin: '*'
                 }
             });
         }
