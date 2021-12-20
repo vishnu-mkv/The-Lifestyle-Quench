@@ -85,7 +85,7 @@ import {EditWriterProfileComponent} from './edit-writer-profile/edit-writer-prof
             deps: [AuthService, Router],
             multi: true
         },
-        {provide: LocationStrategy, useClass: PathLocationStrategy}
+        {provide: LocationStrategy, useClass: HashLocationStrategy}
     ],
     bootstrap: [AppComponent]
 })
