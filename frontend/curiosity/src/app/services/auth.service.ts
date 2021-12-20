@@ -100,6 +100,7 @@ export class AuthService {
 
     logout(redirect = true) {
         localStorage.clear();
+        this.loginSubject.next(false);
         redirect && this.router.navigateByUrl("/");
     }
 

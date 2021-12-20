@@ -15,9 +15,20 @@ export class PostsComponent implements OnInit {
     posts: postSummary[] = []
     config: paginationConfig = {count: 0, current: 0, resultSetSize: 1};
     searchTerm = '';
+    performSearch = false;
+    searchTimer = setTimeout(this.searcher.bind(this), 1000);
 
     constructor(private postsService: PostsService, private messages: MessageService) {
         this.fetchPosts();
+    }
+
+    searcher() {
+        console.log("Searcher", this.performSearch, this.searchTerm);
+        if (!this.performSearch) return;
+        if (this.searchTerm !== '') {
+            this.fetchSearchPosts();
+        } else this.fetchPosts();
+        this.performSearch = false;
     }
 
     fetchPosts() {
@@ -56,9 +67,10 @@ export class PostsComponent implements OnInit {
 
     searchPosts(searchForm: NgForm) {
         this.searchTerm = searchForm.value.search;
-        if (this.searchTerm !== '') {
-            this.fetchSearchPosts();
-        } else this.fetchPosts();
+        clearTimeout(this.searchTimer);
+        this.performSearch = true;
+        console.log(this.searchTerm, this.performSearch);
+        this.searchTimer = setTimeout(this.searcher.bind(this), 1000);
     }
 
     fetchSearchPosts(pageNumber = 1) {

@@ -30,7 +30,7 @@ def writer_post_list_view(request):
 def postSearchView(request, searchTerm):
     paginator = PageNumberPagination()
     paginator.page_size = settings.REST_FRAMEWORK['PAGE_SIZE']
-    objects = Post.objects.filter(Q(title__contains=searchTerm) | Q(summary__contains=searchTerm))
+    objects = Post.objects.filter(Q(title__icontains=searchTerm) | Q(summary__icontains=searchTerm))
     result_page = paginator.paginate_queryset(objects, request)
     serializer = PostSummarySerializer(result_page, many=True, context={'request': request})
     return paginator.get_paginated_response(serializer.data)

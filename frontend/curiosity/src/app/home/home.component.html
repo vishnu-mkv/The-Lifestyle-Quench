@@ -19,13 +19,13 @@
         <h2>Our Top Posts</h2>
 
         <div id="top-post-container">
-            <div class="postbox" id="one">
+            <div *ngIf="topPosts.length > 0" class="postbox" id="one">
                 <app-post-item [post]="topPosts[0]"></app-post-item>
             </div>
-            <div class="postbox" id="two">
+            <div *ngIf="topPosts.length > 1" class="postbox" id="two">
                 <app-post-item [post]="topPosts[1]"></app-post-item>
             </div>
-            <div class="postbox" id="three">
+            <div *ngIf="topPosts.length > 2" class="postbox" id="three">
                 <app-post-item [post]="topPosts[2]"></app-post-item>
             </div>
         </div>

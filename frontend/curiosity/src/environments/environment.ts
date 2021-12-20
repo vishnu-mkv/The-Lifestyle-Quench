@@ -7,7 +7,6 @@ export const environment = {
 };
 
 export const apiURL = 'http://127.0.0.1:8000/';
-// export const apiURL = 'https://curio-sity.herokuapp.com/';
 
 /*
  * For easier debugging in development mode, you can import the following file
