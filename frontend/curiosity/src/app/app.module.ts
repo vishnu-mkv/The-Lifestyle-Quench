@@ -8,7 +8,7 @@ import {HttpClientModule} from '@angular/common/http'
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatIconModule} from '@angular/material/icon';
-import {LocationStrategy, PathLocationStrategy} from '@angular/common';
+import {HashLocationStrategy, LocationStrategy, PathLocationStrategy} from '@angular/common';
 
 import {AppComponent} from './app.component';
 import {HomeComponent} from './home/home.component';
