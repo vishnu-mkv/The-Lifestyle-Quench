@@ -1,0 +1,160 @@
+#hero {
+    display: flex;
+    padding: 1em;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 90vh;
+}
+
+.hero-text {
+    margin-bottom: 1em;
+}
+
+.left {
+    .headline {
+        text-transform: uppercase;
+        margin: 0.4em 0;
+    }
+
+    .quote {
+        font-size: 2em;
+        margin: 0;
+    }
+
+    flex-shrink: 0;
+    max-width: 50%;
+}
+
+.right {
+    img {
+        width: 100%;
+        height: auto;
+    }
+}
+
+#top-posts {
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+}
+
+.end {
+    margin: 0.3em;
+}
+
+#read-more {
+    align-self: center;
+    flex-grow: 0;
+}
+
+#contact-us {
+    padding: 1em;
+}
+
+.contact {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+    .contact-right {
+        background: linear-gradient(to right, var(--blacky), #000);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 1em;
+    }
+}
+
+.message-flex {
+    display: grid;
+    place-items: center;
+}
+
+.color-bg {
+    background-color: var(--greene);
+}
+
+@media screen and (max-width: 800px) {
+
+    #hero {
+        flex-direction: column;
+        justify-content: left;
+
+        .quote {
+            background-color: rgba(30, 29, 29, 0.72);
+        }
+
+        .quote {
+            font-size: 1.5em;
+        }
+    }
+
+
+    .left {
+        margin-right: auto;
+        display: flex;
+        max-width: none;
+        margin-left: 0.5em;
+
+        .hero-text {
+            max-width: 50%;
+
+            h1 {
+                margin-bottom: 0;
+            }
+        }
+
+        .bottom {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            margin-right: 0.5em;
+        }
+    }
+
+    .right {
+
+        img {
+            height: 60vh;
+            width: auto;
+        }
+    }
+
+    .contact {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 500px) {
+
+    .left, .left > .bottom {
+        display: block;
+    }
+
+    .left > .hero-text {
+        max-width: 80%;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .left > .hero-text {
+        max-width: none;
+    }
+}
+
+@media screen and (min-width: 500px) {
+
+    .postbox {
+        max-width: 65%;
+    }
+
+    #two {
+        margin: 0 auto;
+    }
+
+    #three {
+        margin-left: auto;
+    }
+}
+

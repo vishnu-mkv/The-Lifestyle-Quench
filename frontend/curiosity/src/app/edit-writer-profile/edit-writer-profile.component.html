@@ -1,0 +1,28 @@
+<section class="width-control-md" id="edit-writer-profile">
+    <h2>Edit writer profile</h2>
+    <form #updateForm="ngForm" (ngSubmit)="updateWriterProfile(updateForm)" class="form">
+        <div class="form-group vertical">
+            <label for="writer_name">Writer ID</label>
+            <input #writer_name="ngModel" (keyup)="checkWriterNameAvailability(updateForm)"
+                   [(ngModel)]="data.writer_name"
+                   id="writer_name" minlength="6" name="writer_name" required spellcheck="false"/>
+            <p [class]="!(updateForm.submitted && writer_name.invalid) ? 'hidden': ''" class="error-msg">Writer ID is
+                required</p>
+            <p *ngIf="writer_name.valid && !idAvailable" class="error-msg">Writer ID is not available</p>
+            <p *ngIf="invalidWriterName" class="error-msg">Writer ID should only contain alphabets, numbers and
+                hyphen(-).</p>
+            <p *ngIf="originalData.writer_name != data.writer_name && idAvailable" class="info-msg">Writer ID is
+                available</p>
+        </div>
+        <div class="form-group vertical">
+            <label for="bio">Bio</label>
+            <textarea #bio="ngModel" [(ngModel)]="data.bio" cols="50" id="bio"
+                      name="bio" required spellcheck="false"></textarea>
+            <p [class]="!(updateForm.submitted && bio.invalid) ? 'hidden': ''" class="error-msg">Bio is required</p>
+        </div>
+        <div class="button-group">
+            <button class="btn-highlight">Save Changes</button>
+            <button (click)="reset()" class="btn-dark" type="button">Reset</button>
+        </div>
+    </form>
+</section>

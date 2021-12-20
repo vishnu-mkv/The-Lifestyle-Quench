@@ -18,9 +18,8 @@ import {interval} from "rxjs";
 export class PostEditorComponent implements OnInit {
 
     quill: Quill | any;
-    titlePlaceholder = "How Rick Roll become so famous on social medias!";
-    summaryPlaceholder = "Never gonna give you up. Never gonna let you down. Never gonna run around and desert you" +
-        ". Never gonna make you cry. Never gonna say goodbye. Never gonna tell a lie and hurt you";
+    titlePlaceholder = "A nice title would be good.";
+    summaryPlaceholder = "A summary about the post."
 
     postInstance: post = {
         id: 0,
@@ -144,12 +143,12 @@ export class PostEditorComponent implements OnInit {
             content: this.postInstance.content, thumbnail: this.postInstance.thumbnail, slug: this.postInstance.slug
         }, this.postInstance.slug).subscribe(
             data => {
+                this.reloadIfSlugChange(this.postInstance.slug, data.slug);
+                this.create = false;
                 if (!passive) {
                     this.postInstance = data;
                     this.messages.showMessage(this.create ? "Post created." : "Changes saved", 'success');
                 }
-                this.create = false;
-                this.reloadIfSlugChange(this.postInstance.slug, data.slug);
             },
             err => {
                 for (let field in err.error) {

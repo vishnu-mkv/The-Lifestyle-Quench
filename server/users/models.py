@@ -183,3 +183,13 @@ class ForgotPasswordKey(models.Model):
     def mark_as_used(self):
         self.password_changed = True
         return self.save()
+
+class ContactUs(models.Model):
+    email = models.EmailField(blank=False)
+    message = models.TextField(blank=False)
+    name = models.CharField(blank=False, max_length=255)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.name} {self.email} --ContactUs'
+

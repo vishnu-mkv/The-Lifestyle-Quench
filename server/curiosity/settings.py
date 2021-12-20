@@ -282,3 +282,5 @@ LOGGING = {
         }
     }
 }
+
+TOP_POST_SLUGS = ["what-is-so-awesome", "master-the-blaster", "What-is-what"]

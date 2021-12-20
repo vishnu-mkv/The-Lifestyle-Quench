@@ -1,1 +1,89 @@
-<p>home works!</p>
+<div class="cover">
+    <section class="width-control" id="hero">
+        <div class="left">
+            <div class="hero-text">
+                <p class="headline">ask why?</p>
+                <h1><span class="quote">Curiosity is the essence of human existence.</span></h1>
+            </div>
+            <div class="bottom">
+                <button class="btn-highlight"><a routerLink="/posts">See all Posts</a></button>
+                <p class="end">Enjoy your reading.</p>
+            </div>
+        </div>
+        <div class="right">
+            <img alt="people-wondering" src="/assets/5219071.svg">
+        </div>
+    </section>
+    <section class="width-control" id="top-posts">
+
+        <h2>Our Top Posts</h2>
+
+        <div id="top-post-container">
+            <div class="postbox" id="one">
+                <app-post-item [post]="topPosts[0]"></app-post-item>
+            </div>
+            <div class="postbox" id="two">
+                <app-post-item [post]="topPosts[1]"></app-post-item>
+            </div>
+            <div class="postbox" id="three">
+                <app-post-item [post]="topPosts[2]"></app-post-item>
+            </div>
+        </div>
+        <button class="btn-highlight" id="read-more" routerLink="/posts">Read more</button>
+    </section>
+
+    <div [ngClass]="messageSent?'color-bg':''" class="contact width-control">
+        <section *ngIf="!messageSent; else messageSendSuccess" class="contact-left" id="contact-us">
+            <h2>Contact Us</h2>
+            <form #contactForm="ngForm" (ngSubmit)="sendMessage(contactForm)" class="form">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input #name="ngModel" [(ngModel)]="contact.name" id="name" name="name" required type="text">
+                    <p *ngIf="contactForm.submitted && name.invalid" class="error-msg">Name is required</p>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input #email="ngModel" [(ngModel)]="contact.email" email id="email" name="email" required
+                           type="email">
+                    <p *ngIf="contactForm.submitted && email.invalid" class="error-msg">Email is required</p>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea #message="ngModel" [(ngModel)]="contact.message" id="message" name="message"
+                              required type="text"></textarea>
+                    <p *ngIf="contactForm.submitted && message.invalid" class="error-msg">Message is required</p>
+                </div>
+                <div class="button-group">
+                    <button class="btn-highlight" type="submit">Send</button>
+                    <button (click)="resetForm()" class="btn-dark" type="reset">Reset</button>
+                </div>
+            </form>
+        </section>
+        <div class="contact-right">
+            <h2>Subscribe for newsletters.</h2>
+            <form #subscribeForm="ngForm" (ngSubmit)="subscribe(subscribeForm)" *ngIf="!subscribed; else subscribeDone"
+                  class="form">
+                <div class="form-group">
+                    <label for="sub-email">Email</label>
+                    <input #email="ngModel" [(ngModel)]="subEmail" email id="sub-email" name="email" required
+                           type="email">
+                    <p *ngIf="subscribeForm.submitted && email.invalid" class="error-msg">Email is required</p>
+                </div>
+                <button class="btn-highlight" type="submit">Subscribe</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<ng-template #messageSendSuccess>
+    <section class="contact-left" id="contact-us">
+        <div class="message-flex">
+            <p>Your message has been sent. You will hear from us soon.</p>
+            <button (click)="messageSent=false" class="btn-dark">Send another message.</button>
+        </div>
+    </section>
+</ng-template>
+
+<ng-template #subscribeDone>
+    <p class="info-msg">You will receive mails everytime we post.</p>
+</ng-template>

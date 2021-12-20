@@ -4,7 +4,8 @@ from django.contrib.auth.models import Group
 
 from .forms import UserAdminCreateForm, UserAdminChangeForm, WriterApplicationForm, EmailActivationForm, \
     ForgotPasswordAdminForm
-from .models import User, WriterApplication, WriterProfile, UserProfile, EmailActivation, ForgotPasswordKey
+from .models import User, WriterApplication, WriterProfile, UserProfile, EmailActivation, ForgotPasswordKey, \
+    ContactUs
 # Register your models here.
 from .send_email import send_activation_email, send_forgot_password_email
 
@@ -89,6 +90,7 @@ admin.site.register(User, UserAdmin)
 admin.site.register(WriterProfile)
 admin.site.register(WriterApplication, WriterApplicationAdmin)
 admin.site.register(UserProfile)
+admin.site.register(ContactUs)
 admin.site.register(EmailActivation, EmailActivationAdmin)
 admin.site.register(ForgotPasswordKey, ForgotPasswordAdmin)
 

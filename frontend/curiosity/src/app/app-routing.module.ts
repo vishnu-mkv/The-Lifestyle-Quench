@@ -16,6 +16,7 @@ import {PostEditorComponent} from "./post-editor/post-editor.component";
 import {PostviewComponent} from "./postview/postview.component";
 import {WriterGuard} from "./guards/writer.guard";
 import {PostsComponent} from "./posts/posts.component";
+import {EditWriterProfileComponent} from "./edit-writer-profile/edit-writer-profile.component";
 
 const routes: Routes = [
     {
@@ -32,6 +33,11 @@ const routes: Routes = [
         path: 'profile/change-password',
         component: ChangePasswordComponent,
         canActivate: [AuthGuardService]
+    },
+    {
+        path: 'profile/edit/writer-profile',
+        component: EditWriterProfileComponent,
+        canActivate: [WriterGuard]
     },
     {
         path: 'profile/edit',

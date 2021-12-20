@@ -17,7 +17,7 @@ from .models import User, EmailActivation, validate_key_and_activate_user, Forgo
 from .send_email import send_activation_email, send_forgot_password_email
 from .serializers import RegisterUserSerializer, ChangePasswordSerializer, ForgotPasswordChangeSerializer, \
     UserProfileSerializer, EditProfileSerializer, WriterProfileSerializer, WriterApplicationSerializer, \
-    WriterApplicationReviewSerializer, AuthTokenSerializer
+    WriterApplicationReviewSerializer, AuthTokenSerializer, ContactUsSerializer
 
 
 class ObtainExpiringAuthToken(ObtainAuthToken):
@@ -178,7 +178,6 @@ def get_writer_profile_view(request):
 @api_view(['GET', 'PATCH'])
 def writer_profile_view(request, writer_name):
     try:
-
         profile = WriterProfile.objects.get(writer_name=writer_name)
         if request.method == "GET":
             serializer = WriterProfileSerializer(instance=profile)
@@ -195,8 +194,6 @@ def writer_profile_view(request, writer_name):
             if serializer.is_valid():
                 serializer.save()
                 res = serializer.validated_data
-                res['url'] = request.build_absolute_uri(
-                    f'../{res["writer_name"]}')
                 return Response(res)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -358,3 +355,10 @@ def has_pending_writer_application(request):
         return Response({"application": False})
     return Response({"application": True, "data": WriterApplicationSerializer(application.first()).data})
 
+@api_view(['POST'])
+def contact_us_view(request):
+    serializer = ContactUsSerializer(data=request.data)
+    if(serializer.is_valid()):
+        serializer.save()
+        return Response({'success': True})
+    return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)

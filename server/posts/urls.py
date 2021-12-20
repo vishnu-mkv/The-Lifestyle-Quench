@@ -9,7 +9,10 @@ router = DefaultRouter()
 router.register('', PostViewSet, basename='post')
 
 urlpatterns = [
-    path('<slug>/submit/', postSubmitView, name='submit-delete')
+    path('<slug>/submit/', postSubmitView, name='submit-delete'),
+    path('search/<searchTerm>/', postSearchView, name='post-search'),
+    path('top/', getTopPostsView, name='top-posts'),
+    path('subscribe/', subscribeView, name='subscribe')
 ]
 
 urlpatterns += router.urls

@@ -17,7 +17,8 @@
 
             <img (click)="popup.open('thumbnail-upload')" [hidden]="postInstance.thumbnail === ''"
                  [src]="postInstance.thumbnail" alt="" class="width-control">
-            <p (click)="popup.open('thumbnail-upload')" *ngIf="postInstance.thumbnail === ''">No thumbnail</p>
+            <p (click)="popup.open('thumbnail-upload')" *ngIf="postInstance.thumbnail === ''">No thumbnail. Click to
+                add.</p>
             <input [(ngModel)]="postInstance.thumbnail" class="hidden" name="thumbnail" required type="text">
         </div>
 

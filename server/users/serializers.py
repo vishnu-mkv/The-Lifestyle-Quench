@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from images.models import ProfileImage
 from utils.ImageUrlValidator import validate_image_url
 
-from .models import User, ForgotPasswordKey, UserProfile, WriterProfile, WriterApplication
+from .models import User, ForgotPasswordKey, UserProfile, WriterProfile, WriterApplication, ContactUs
 
 
 class AuthTokenSerializer(serializers.Serializer):
@@ -276,3 +276,10 @@ class WriterApplicationReviewSerializer(serializers.ModelSerializer):
             instance.approved_by = self.context['request'].user
         instance.save()
         return instance
+
+
+class ContactUsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ContactUs
+        fields = "__all__"

@@ -54,6 +54,11 @@ interface changePassword {
     message: string
 }
 
+interface WriterNameAvailResponse {
+    writer_name: string,
+    availability: boolean
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -69,7 +74,7 @@ export class AuthService {
 
     constructor(private http: HttpClient, private router: Router) {
         if (this.isAuthenticated()) {
-            this.profileSubject.next(JSON.parse(localStorage.getItem('profile') as string))
+            this.profileSubject.next(JSON.parse(localStorage.getItem('profile') as string));
             this.writerSubject.next(JSON.parse(localStorage.getItem('writer') as string));
         }
     }
@@ -94,24 +99,7 @@ export class AuthService {
     }
 
     logout(redirect = true) {
-        localStorage.setItem('token', "");
-        localStorage.setItem('expiresAt', "");
-        localStorage.setItem('profile', "");
-        localStorage.setItem('writer', "");
-        this.loginSubject.next(false);
-        this.profileSubject.next({
-            profile_pic: "",
-            user: {
-                first_name: "",
-                last_name: "",
-                writer: false,
-                admin: false,
-                staff: false,
-                active: false,
-                date_created: "",
-                email: ""
-            }
-        });
+        localStorage.clear();
         redirect && this.router.navigateByUrl("/");
     }
 
@@ -219,6 +207,14 @@ export class AuthService {
 
     getWriterApplicationHistory() {
         return this.http.get<WriterApplicationResponse[]>(apiURL + 'api/users/apply/history/');
+    }
+
+    checkWriterNameAvailability(writer_name: string) {
+        return this.http.post<WriterNameAvailResponse>(apiURL + 'check-availability/writer-name/', {writer_name})
+    }
+
+    updateWriterProfile(data: writerProfile, writer_name: string) {
+        return this.http.patch<writerProfile>(apiURL + 'api/users/writer-profile/' + writer_name + '/', data);
     }
 }
 

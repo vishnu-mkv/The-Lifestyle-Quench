@@ -35,6 +35,7 @@ import {PostviewComponent} from './postview/postview.component';
 import {PostsComponent} from './posts/posts.component';
 import {PostItemComponent} from './post-item/post-item.component';
 import {PaginationComponent} from './pagination/pagination.component';
+import {EditWriterProfileComponent} from './edit-writer-profile/edit-writer-profile.component';
 
 @NgModule({
     declarations: [
@@ -58,7 +59,8 @@ import {PaginationComponent} from './pagination/pagination.component';
         PostviewComponent,
         PostsComponent,
         PostItemComponent,
-        PaginationComponent
+        PaginationComponent,
+        EditWriterProfileComponent
     ],
     imports: [
         BrowserModule,

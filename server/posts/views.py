@@ -6,9 +6,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.viewsets import GenericViewSet
+from rest_framework.pagination import PageNumberPagination
+from django.conf import settings
+from django.db.models import Q
 
-from .models import Post, Submission
-from .serializers import PostSerializer, PostSummarySerializer
+from .models import Post, Submission, Subscription
+from .serializers import PostSerializer, PostSummarySerializer, SubscriptionSerializer
 # Create your views here.
 
 
@@ -22,6 +25,15 @@ def writer_post_list_view(request):
     queryset = Post.objects.filter(writer=request.user).order_by('-last_edited')
     serializer = PostSummarySerializer(queryset, many=True, context={'request': request})
     return Response(serializer.data)
+
+@api_view(['GET'])
+def postSearchView(request, searchTerm):
+    paginator = PageNumberPagination()
+    paginator.page_size = settings.REST_FRAMEWORK['PAGE_SIZE']
+    objects = Post.objects.filter(Q(title__contains=searchTerm) | Q(summary__contains=searchTerm))
+    result_page = paginator.paginate_queryset(objects, request)
+    serializer = PostSummarySerializer(result_page, many=True, context={'request': request})
+    return paginator.get_paginated_response(serializer.data)
 
 
 class PostViewSet(ListModelMixin, GenericViewSet):
@@ -164,5 +176,20 @@ def postSubmitView(request, slug):
 
         return Response({'status': 'D', 'message': 'Post submission has been deleted.'})
 
+@api_view(['GET'])
+def getTopPostsView(request):
+    qs = Post.objects.filter(slug__in=settings.TOP_POST_SLUGS)
+    serializer = PostSerializer(qs, many=True, context={'request': request})
+    return Response(serializer.data)
 
+@api_view(['POST'])
+def subscribeView(request):
+    serializer = SubscriptionSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'success': True})
 
+    if request.data.get('email') and Subscription.objects.filter(email=request.data['email']).count() != 0:
+        return Response({'success': True})
+
+    return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)

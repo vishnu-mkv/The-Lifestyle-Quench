@@ -68,3 +68,10 @@ class Submission(models.Model):
 
     def __str__(self):
         return f'submission - {self.post}'
+
+class Subscription(models.Model):
+    email = models.EmailField(unique=True)
+    subscribed_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'subscription - {self.email}'

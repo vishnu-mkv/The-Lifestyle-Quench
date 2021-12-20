@@ -2,7 +2,7 @@ from rest_framework import serializers
 import re
 from bs4 import BeautifulSoup as bs
 
-from .models import Post, Submission
+from .models import Post, Submission, Subscription
 from images.models import PostThumbnail, PostImage
 from utils.ImageUrlValidator import validate_image_url
 
@@ -163,4 +163,9 @@ class PostSerializer(serializers.ModelSerializer):
 class SubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Submission
+        fields = '__all__'
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subscription
         fields = '__all__'

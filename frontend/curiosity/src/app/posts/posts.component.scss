@@ -24,3 +24,15 @@
 .action {
     background-color: var(--blacky) !important;
 }
+
+@media screen and (max-width: 400px) {
+
+    #post-list {
+        margin-top: 0;
+        margin-bottom: 9em;
+    }
+
+    .ribbon > h2 {
+        margin: 0.5em 0;
+    }
+}

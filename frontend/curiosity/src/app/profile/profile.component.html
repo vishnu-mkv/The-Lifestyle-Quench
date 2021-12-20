@@ -40,7 +40,7 @@
     </div>
 
     <div *ngIf="isWriter" id="posts">
-        <a class="ribbon">
+        <a class="ribbon ribbon-no-wrap">
             <h3>Your posts</h3>
             <div [routerLink]="['/posts/new/edit']" class="action">
                 <mat-icon>add</mat-icon>
@@ -80,7 +80,7 @@
 <ng-template #editWriter>
     <li>
         <mat-icon>badge</mat-icon>
-        <a routerLink="">Edit writer profile</a></li>
+        <a routerLink="edit/writer-profile">Edit writer profile</a></li>
 </ng-template>
 
 <popup id="confirm-delete">

@@ -2,17 +2,21 @@
     <div class="ribbon">
         <h2>Posts</h2>
         <div class="action">
-            <form #search="ngForm" id="search">
+            <form #search="ngForm" (ngSubmit)="searchPosts(search)" id="search">
                 <mat-icon>search</mat-icon>
-                <input placeholder="Search..." type="text">
+                <input (keyup)="searchPosts(search)" name="search" ngModel placeholder="Search..." type="text">
                 <button class="btn-highlight">Go</button>
             </form>
         </div>
     </div>
-    <div class="list">
+    <div *ngIf="posts.length != 0; else noPosts" class="list">
         <div *ngFor="let post of posts" class="postbox">
             <app-post-item [post]="post"></app-post-item>
         </div>
     </div>
-    <app-pagination (pageEmitter)="paginate($event)" [config]="config"></app-pagination>
+    <app-pagination (pageEmitter)="paginate($event)" *ngIf="posts.length != 0" [config]="config"></app-pagination>
 </section>
+
+<ng-template #noPosts>
+    <p id="no-posts">No posts found!</p>
+</ng-template>

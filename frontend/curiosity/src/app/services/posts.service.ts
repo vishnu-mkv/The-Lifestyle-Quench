@@ -62,4 +62,20 @@ export class PostsService {
     getPostList(pageNumber = 1) {
         return this.http.get<postList>(apiURL + 'posts/?page=' + pageNumber);
     }
+
+    search(searchTerm: string, pageNumber: number) {
+        return this.http.get<postList>(apiURL + 'posts/search/' + searchTerm + '?page=' + pageNumber);
+    }
+
+    getTopPosts() {
+        return this.http.get<postSummary[]>(apiURL + 'posts/top/');
+    }
+
+    sendMessage(data: { name: string, email: string, message: string }) {
+        return this.http.post<{ success: boolean }>(apiURL + 'api/users/contact-us/', data);
+    }
+
+    subscribe(data: { email: string }) {
+        return this.http.post<{ success: boolean }>(apiURL + 'posts/subscribe/', data);
+    }
 }

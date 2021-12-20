@@ -1,4 +1,4 @@
-<div class="post">
+<div *ngIf="post" class="post">
     <a [routerLink]="['/posts', post.slug]" class="post" style="cursor: pointer">
         <img [src]="post.thumbnail" alt="" class="thumbnail">
         <div class="text">
