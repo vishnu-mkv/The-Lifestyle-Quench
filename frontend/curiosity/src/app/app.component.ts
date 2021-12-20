@@ -13,7 +13,10 @@ export class AppComponent {
 
     constructor(private router: Router, private nav: NavService, private auth: AuthService) {
 
-        auth.fetchProfile();
+        if (this.auth.isAuthenticated()) {
+            auth.fetchProfile();
+        }
+
         router.events.subscribe({
             next: event => {
                 if (event instanceof NavigationEnd) {
