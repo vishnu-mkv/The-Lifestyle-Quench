@@ -8,7 +8,6 @@ import {HttpClientModule} from '@angular/common/http'
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatIconModule} from '@angular/material/icon';
-import {HashLocationStrategy, LocationStrategy, PathLocationStrategy} from '@angular/common';
 
 import {AppComponent} from './app.component';
 import {HomeComponent} from './home/home.component';
@@ -84,8 +83,7 @@ import {EditWriterProfileComponent} from './edit-writer-profile/edit-writer-prof
             },
             deps: [AuthService, Router],
             multi: true
-        },
-        {provide: LocationStrategy, useClass: HashLocationStrategy}
+        }
     ],
     bootstrap: [AppComponent]
 })
