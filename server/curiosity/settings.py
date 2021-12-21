@@ -32,7 +32,7 @@ SECRET_KEY = DJANGO_SECRET_KEY if DEBUG else os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = ['curio-sity.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -104,7 +104,7 @@ AUTH_USER_MODEL = 'users.User'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -194,6 +194,7 @@ MEDIA_URL = '/media/'
 # for email services
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
+
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 
@@ -202,7 +203,7 @@ DAILY_ACTIVATION_LIMIT = 10
 DAILY_FORGOT_PASSWORD_EMAIL_LIMIT = 10
 
 # Authentication token validity in hours
-AUTH_TOKEN_VALIDITY = 1080
+AUTH_TOKEN_VALIDITY = 0.033
 
 if DEBUG:
     EMAIL_HOST_USER = EMAIL_ID
@@ -210,12 +211,14 @@ if DEBUG:
     AWS_ACCESS_KEY_ID = AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY = AWS_SECRET_ACCESS_KEY
     AWS_STORAGE_BUCKET_NAME = AWS_STORAGE_BUCKET_NAME
+    FRONTEND_URL = FRONTEND_URL
 else:
     EMAIL_HOST_USER = os.environ.get('EMAIL_ID')
     EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_APP_KEY')
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    FRONTEND_URL = os.environ.get('FRONTEND_URL')
     django_heroku.settings(locals())
 
 AWS_S3_FILE_OVERRIDE = False
@@ -283,5 +286,6 @@ LOGGING = {
     }
 }
 
+# For debug
 # TOP_POST_SLUGS = ["what-is-so-awesome", "master-the-blaster", "What-is-what"]
-TOP_POST_SLUGS = ["theory-of-love-in-platos-symposium", "theory-of-natural-selection", "free-radical-theory-of-aging"]
+TOP_POST_SLUGS = ["theory-of-love-in-platos-symposium", "a-little-thing-called-love", "free-radical-theory-of-aging"]

@@ -28,7 +28,7 @@ class ObtainExpiringAuthToken(ObtainAuthToken):
                 user=serializer.validated_data['user'])
 
             utc_now = datetime.datetime.utcnow().replace(tzinfo=pytz.UTC)
-            if not created and token.created < utc_now - datetime.timedelta(hours=-1):
+            if not created and token.created < utc_now - datetime.timedelta(hours=settings.AUTH_TOKEN_VALIDITY):
                 token.delete()
                 token = Token.objects.create(
                     user=serializer.validated_data['user'])

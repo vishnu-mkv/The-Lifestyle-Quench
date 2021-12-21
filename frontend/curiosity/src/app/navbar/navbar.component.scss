@@ -33,6 +33,7 @@
     #right {
         display: flex;
         padding: 0;
+        z-index: 1;
 
         #acc-view-mobile {
             display: none;

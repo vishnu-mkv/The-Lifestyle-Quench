@@ -23,7 +23,6 @@ export class PostsComponent implements OnInit {
     }
 
     searcher() {
-        console.log("Searcher", this.performSearch, this.searchTerm);
         if (!this.performSearch) return;
         if (this.searchTerm !== '') {
             this.fetchSearchPosts();
@@ -69,7 +68,6 @@ export class PostsComponent implements OnInit {
         this.searchTerm = searchForm.value.search;
         clearTimeout(this.searchTimer);
         this.performSearch = true;
-        console.log(this.searchTerm, this.performSearch);
         this.searchTimer = setTimeout(this.searcher.bind(this), 1000);
     }
 

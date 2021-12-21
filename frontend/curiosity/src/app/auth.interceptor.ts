@@ -10,12 +10,13 @@ import {AuthService} from './services/auth.service';
 import {Observable, of, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {Router} from '@angular/router';
+import {MessageService} from "./services/message.service";
 
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 
-    constructor(public auth: AuthService, private router: Router) {
+    constructor(public auth: AuthService, private router: Router, private messages: MessageService) {
     }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -34,14 +35,20 @@ export class TokenInterceptor implements HttpInterceptor {
     }
 
     private handleAuthError(err: HttpErrorResponse): Observable<any> {
+
+        if (err.status === 401) {
+            this.auth.logout();
+            this.messages.showMessage("Unauthorized. Logging you out.", "error");
+        }
+
         //handle your auth error or rethrow
         if (err.status === 401 || err.status === 403) {
             //navigate /delete cookies or whatever
-            // this.auth.logout();
             this.router.navigateByUrl(`/login`);
             // if you've caught / handled the error, you don't want to rethrow it unless you also want downstream consumers to have to handle it as well.
             return of(err.message); // or EMPTY may be appropriate here
         }
+
         return throwError(err);
     }
 }

@@ -36,6 +36,7 @@ import {PostsComponent} from './posts/posts.component';
 import {PostItemComponent} from './post-item/post-item.component';
 import {PaginationComponent} from './pagination/pagination.component';
 import {EditWriterProfileComponent} from './edit-writer-profile/edit-writer-profile.component';
+import {MessageService} from "./services/message.service";
 
 @NgModule({
     declarations: [
@@ -78,8 +79,8 @@ import {EditWriterProfileComponent} from './edit-writer-profile/edit-writer-prof
         PopupService,
         {
             provide: HTTP_INTERCEPTORS,
-            useFactory: function (auth: AuthService, router: Router) {
-                return new TokenInterceptor(auth, router);
+            useFactory: function (auth: AuthService, router: Router, messages: MessageService) {
+                return new TokenInterceptor(auth, router, messages);
             },
             deps: [AuthService, Router],
             multi: true

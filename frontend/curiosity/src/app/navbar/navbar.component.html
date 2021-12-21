@@ -2,7 +2,7 @@
     <div class="width-control" id="navbar">
         <div id="left">
             <img (click)="toggleMenu()" [ngClass]="(showNav | async)?'menu-active':''" alt="" id="menu" src="">
-            <h2>Curiosity</h2>
+            <a routerLink="./"><h2>Curiosity</h2></a>
         </div>
         <div [ngClass]="(showNav | async )? 'show-menu':'hide-menu'" id="right">
             <ul>

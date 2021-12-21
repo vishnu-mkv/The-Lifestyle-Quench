@@ -1,5 +1,5 @@
 #messages {
-    position: absolute;
+    position: fixed;
     bottom: 2em;
     left: 1em;
     z-index: 1001;
@@ -29,7 +29,7 @@
 @media screen and (max-width: 500px) {
 
     #messages {
-        width: 50vw;
+        max-width: 75vw;
         margin-left: auto;
         margin-right: auto;
         left: 0;
