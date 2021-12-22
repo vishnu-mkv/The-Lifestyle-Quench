@@ -179,9 +179,13 @@ def get_writer_profile_view(request):
 def writer_profile_view(request, writer_name):
     try:
         profile = WriterProfile.objects.get(writer_name=writer_name)
+
         if request.method == "GET":
             serializer = WriterProfileSerializer(instance=profile)
-            return Response(serializer.data)
+            userSerializer = UserProfileSerializer(instance=profile.user.userprofile, context={'request': request})
+            data = {'writer' : serializer.data, 'user': userSerializer.data}
+            data['user']['user']['email'] = ""
+            return Response(data)
 
         if request.method == "PATCH":
             if not request.user:

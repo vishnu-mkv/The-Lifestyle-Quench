@@ -43,7 +43,7 @@ export class PostsComponent implements OnInit {
     setPostData(data: postList, page = 1) {
         this.posts = data.results;
         this.config.count = data.count;
-        this.config.resultSetSize = 5;
+        this.config.resultSetSize = data.results.length;
         this.config.current = page;
     }
 

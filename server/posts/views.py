@@ -9,6 +9,8 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.pagination import PageNumberPagination
 from django.conf import settings
 from django.db.models import Q
+from django.contrib.auth.models import User
+from users.models import WriterProfile
 
 from .models import Post, Submission, Subscription
 from .serializers import PostSerializer, PostSummarySerializer, SubscriptionSerializer
@@ -35,6 +37,19 @@ def postSearchView(request, searchTerm):
     serializer = PostSummarySerializer(result_page, many=True, context={'request': request})
     return paginator.get_paginated_response(serializer.data)
 
+@api_view(['GET'])
+def writerPostListView(request, writer_id):
+    paginator = PageNumberPagination()
+    paginator.page_size = settings.REST_FRAMEWORK['PAGE_SIZE']
+    try:
+        writerProfile = WriterProfile.objects.get(writer_name=writer_id)
+        objects = Post.objects.filter(writer=writerProfile.user).order_by('-last_edited')
+        result_page = paginator.paginate_queryset(objects, request)
+        serializer = PostSummarySerializer(result_page, many=True, context={'request': request})
+        return paginator.get_paginated_response(serializer.data)
+
+    except WriterProfile.DoesNotExist:
+        return Response({'writer_id': "invalid writer id"}, status.HTTP_404_NOT_FOUND)
 
 class PostViewSet(ListModelMixin, GenericViewSet):
     queryset = Post.objects.all()
@@ -193,3 +208,10 @@ def subscribeView(request):
         return Response({'success': True})
 
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+

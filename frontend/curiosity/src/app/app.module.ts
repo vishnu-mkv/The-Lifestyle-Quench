@@ -37,6 +37,7 @@ import {PostItemComponent} from './post-item/post-item.component';
 import {PaginationComponent} from './pagination/pagination.component';
 import {EditWriterProfileComponent} from './edit-writer-profile/edit-writer-profile.component';
 import {MessageService} from "./services/message.service";
+import { WriterProfileComponent } from './writer-profile/writer-profile.component';
 
 @NgModule({
     declarations: [
@@ -61,7 +62,8 @@ import {MessageService} from "./services/message.service";
         PostsComponent,
         PostItemComponent,
         PaginationComponent,
-        EditWriterProfileComponent
+        EditWriterProfileComponent,
+        WriterProfileComponent
     ],
     imports: [
         BrowserModule,

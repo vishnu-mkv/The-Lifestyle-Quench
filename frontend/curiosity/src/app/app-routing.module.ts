@@ -17,12 +17,17 @@ import {PostviewComponent} from "./postview/postview.component";
 import {WriterGuard} from "./guards/writer.guard";
 import {PostsComponent} from "./posts/posts.component";
 import {EditWriterProfileComponent} from "./edit-writer-profile/edit-writer-profile.component";
+import {WriterProfileComponent} from "./writer-profile/writer-profile.component";
 
 const routes: Routes = [
     {
         path: 'profile/apply-writer',
         component: WriterApplicationComponent,
         canActivate: [AuthGuardService],
+    },
+    {
+        path: 'writer/:id',
+        component: WriterProfileComponent
     },
     {
         path: 'profile/apply-writer/history',
@@ -78,12 +83,16 @@ const routes: Routes = [
         component: PostsComponent
     },
     {
+        path: '404',
+        component: PageNotFoundComponent
+    },
+    {
         path: '',
         component: HomeComponent
     },
     {
         path: '**',
-        component: PageNotFoundComponent
+        redirectTo: '404'
     }
 ];
 

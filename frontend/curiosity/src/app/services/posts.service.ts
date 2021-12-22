@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {apiURL} from "../../environments/environment";
 import {Observable} from "rxjs";
-import {post, postSummary} from "../interfaces";
+import {post, postSummary, writerUserProfile} from "../interfaces";
 import {AuthService} from "./auth.service";
 
 
@@ -77,5 +77,13 @@ export class PostsService {
 
     subscribe(data: { email: string }) {
         return this.http.post<{ success: boolean }>(apiURL + 'posts/subscribe/', data);
+    }
+
+    getWriterProfile(id: string) {
+        return this.http.get<writerUserProfile>(apiURL+'api/users/writer-profile/'+id+'/');
+    }
+
+    getPostsByWriter(id: string, page: number=1) {
+        return this.http.get<postList>(apiURL + 'posts/writer/'+id+'?page='+page);
     }
 }

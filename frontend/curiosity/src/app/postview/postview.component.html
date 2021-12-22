@@ -12,7 +12,7 @@
     <div class="writer">
         <img [src]="post.writer_profile_pic" alt="" id="profile-pic">
         <div class="info">
-            <p class="name">{{post.writer}}</p>
+            <p class="name"><a [routerLink]="'/writer/'+post.writer_id">{{post.writer}}</a></p>
             <p class="date">On {{post.last_edited | date:'MMM d, y, h:mm a'}}</p>
         </div>
     </div>

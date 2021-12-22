@@ -18,6 +18,11 @@ export interface writerProfile {
     bio: string
 }
 
+export interface writerUserProfile {
+    'writer': writerProfile,
+    'user': Profile
+}
+
 export interface userRegistration {
     email: string,
     first_name: string,
