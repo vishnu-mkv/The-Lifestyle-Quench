@@ -1,11 +1,11 @@
-<section id="writer-profile" class="width-control" *ngIf="profile">
+<section id="writer-profile" class="width-control" *ngIf="profile && profile.user && profile.writer">
     <div class="user-container width-control-md">
         <img [src]="profile.user.profile_pic" alt="" id="profile-pic">
         <h3 id="username">{{profile.user.user.first_name + ' ' + profile.user.user.last_name}}</h3>
         <p>{{profile.writer.bio}}</p>
     </div>
     <div class="post-container">
-        <h3>Writer Posts</h3>
+        <h3>Posts by {{profile.user.user.first_name}}</h3>
         <div *ngIf="writerPosts.length != 0; else noPosts" class="list">
             <div *ngFor="let post of writerPosts" class="postbox">
                 <app-post-item [post]="post"></app-post-item>

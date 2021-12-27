@@ -1,0 +1,28 @@
+.tech-container {
+    display: flex;
+    gap: 2em;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+h3 {
+    text-align: center;
+    margin: 1.5em;
+}
+
+#about {
+    padding: 1em;
+    margin-bottom: 1em;
+    &>div {
+        margin: 0.5em 0;
+    }
+}
+
+li {
+    margin: 0.4em 0;
+}
+
+.link{
+    color: var(--greene);
+    text-decoration: underline;
+}

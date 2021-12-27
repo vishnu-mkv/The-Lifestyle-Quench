@@ -38,6 +38,8 @@ import {PaginationComponent} from './pagination/pagination.component';
 import {EditWriterProfileComponent} from './edit-writer-profile/edit-writer-profile.component';
 import {MessageService} from "./services/message.service";
 import { WriterProfileComponent } from './writer-profile/writer-profile.component';
+import { AboutComponent } from './about/about.component';
+import { CardComponent } from './card/card.component';
 
 @NgModule({
     declarations: [
@@ -63,7 +65,9 @@ import { WriterProfileComponent } from './writer-profile/writer-profile.componen
         PostItemComponent,
         PaginationComponent,
         EditWriterProfileComponent,
-        WriterProfileComponent
+        WriterProfileComponent,
+        AboutComponent,
+        CardComponent
     ],
     imports: [
         BrowserModule,

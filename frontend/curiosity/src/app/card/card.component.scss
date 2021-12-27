@@ -1,0 +1,38 @@
+.card {
+
+    border-radius: 0.5em;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 93%;
+    background-color: var(--grey);
+    width: fit-content;
+    gap: 1em;
+    max-width: 10em;
+    padding: 1em 0.5em 0 0.5em;
+
+    .top > img {
+        object-fit: contain;
+        height: 8em;
+        max-width: 8em;
+    }
+
+    .bottom {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25em;
+        align-items: center;
+
+        h4 {
+            margin: 0;
+        }
+
+        p {
+            font-weight: 300;
+            font-size: 0.7em;
+            color: var(--dark-white);
+            text-align: center;
+        }
+    }
+}

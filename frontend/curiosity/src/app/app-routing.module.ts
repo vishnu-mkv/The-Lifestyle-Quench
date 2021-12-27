@@ -18,6 +18,7 @@ import {WriterGuard} from "./guards/writer.guard";
 import {PostsComponent} from "./posts/posts.component";
 import {EditWriterProfileComponent} from "./edit-writer-profile/edit-writer-profile.component";
 import {WriterProfileComponent} from "./writer-profile/writer-profile.component";
+import {AboutComponent} from "./about/about.component";
 
 const routes: Routes = [
     {
@@ -85,6 +86,10 @@ const routes: Routes = [
     {
         path: '404',
         component: PageNotFoundComponent
+    },
+    {
+        path: 'about',
+        component: AboutComponent
     },
     {
         path: '',
