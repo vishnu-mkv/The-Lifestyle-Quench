@@ -24,7 +24,7 @@ def writer_post_list_view(request):
     if not request.user.writer:
         return Response({"message": "Not a writer"}, status.HTTP_403_FORBIDDEN)
 
-    queryset = Post.objects.filter(writer=request.user, status='P').order_by('-last_edited')
+    queryset = Post.objects.filter(writer=request.user).order_by('-last_edited')
     serializer = PostSummarySerializer(queryset, many=True, context={'request': request})
     return Response(serializer.data)
 
@@ -44,7 +44,7 @@ def writerPostListView(request, writer_id):
 
     try:
         writerProfile = WriterProfile.objects.get(writer_name=writer_id)
-        objects = Post.objects.filter(writer=writerProfile.user).order_by('-last_edited')
+        objects = Post.objects.filter(writer=writerProfile.user, status='P').order_by('-last_edited')
         result_page = paginator.paginate_queryset(objects, request)
         serializer = PostSummarySerializer(result_page, many=True, context={'request': request})
         return paginator.get_paginated_response(serializer.data)
