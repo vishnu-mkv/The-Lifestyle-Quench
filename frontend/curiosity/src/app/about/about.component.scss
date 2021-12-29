@@ -28,5 +28,10 @@ li {
 }
 
 ul {
-    padding-left: 0.5em;
+    padding-left: 1em;
+}
+
+li, p {
+    font-size: 0.95em;
+    color: var(--dark-white);
 }
