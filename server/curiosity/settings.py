@@ -185,7 +185,7 @@ if DEBUG:
         os.path.join(BASE_DIR, 'static/'),
     ]
 else:
-    STATIC_ROOT = Path.joinpath(BASE_DIR, 'static/')
+    STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = '/static/'
 
 
