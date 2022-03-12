@@ -13,7 +13,7 @@ h3 {
 #about {
     padding: 1em;
     margin-bottom: 1em;
-    &>div {
+    & > div {
         margin: 0.5em 0;
     }
 }
@@ -22,7 +22,7 @@ li {
     margin: 0.4em 0;
 }
 
-.link{
+.link {
     color: var(--greene);
     text-decoration: underline;
 }
@@ -31,7 +31,8 @@ ul {
     padding-left: 1em;
 }
 
-li, p {
-    font-size: 0.95em;
+li,
+p {
+    font-size: 0.95rem;
     color: var(--dark-white);
 }

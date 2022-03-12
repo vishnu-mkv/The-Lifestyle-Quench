@@ -26,24 +26,28 @@ class ReadWriteSerializerMethodField(serializers.SerializerMethodField):
     def to_internal_value(self, data):
         return {self.field_name: data}
 
+
 class PostSummarySerializer(serializers.ModelSerializer):
 
     thumbnail = serializers.SerializerMethodField()
-    writer = serializers.CharField(source='writer.get_full_name', read_only=True)
+    writer = serializers.CharField(
+        source='writer.get_full_name', read_only=True)
 
     class Meta:
         model = Post
         exclude = ['content']
 
     def get_thumbnail(self, obj):
-            request = self.context['request']
-            return request.build_absolute_uri(obj.thumbnail.image.url)
+        request = self.context['request']
+        return request.build_absolute_uri(obj.thumbnail.image.url)
 
 
 class PostSerializer(serializers.ModelSerializer):
     thumbnail = ReadWriteSerializerMethodField('get_thumbnail', required=True)
-    writer = serializers.CharField(source='writer.get_full_name', read_only=True)
-    writer_id = serializers.CharField(source='writer.writerprofile.writer_name', read_only=True)
+    writer = serializers.CharField(
+        source='writer.get_full_name', read_only=True)
+    writer_id = serializers.CharField(
+        source='writer.writerprofile.writer_name', read_only=True)
     content = ReadWriteSerializerMethodField('get_content', required=True)
     writer_profile_pic = serializers.SerializerMethodField()
 
@@ -130,7 +134,8 @@ class PostSerializer(serializers.ModelSerializer):
 
         try:
             Post.objects.get(slug=urlify(title))
-            raise serializers.ValidationError("A post with this title already exists")
+            raise serializers.ValidationError(
+                "A post with this title already exists")
         except Post.DoesNotExist:
             return title
 
@@ -142,13 +147,15 @@ class PostSerializer(serializers.ModelSerializer):
         content = field_dict['content']
 
         soup = bs(content, features="html.parser")
-        if soup.find('script'):
-            raise serializers.ValidationError('script tags not allowed.')
+        for s in soup(['script']):
+            s.decompose()
+
         images = soup.find_all('img')
         err = {}
         for img in images:
             try:
-                instance = validate_image_url(img['src'], PostImage, self.context['request'], False)
+                instance = validate_image_url(
+                    img['src'], PostImage, self.context['request'], False)
                 self.content_image_set_recieved.append(instance)
                 img['src'] = instance.id
             except serializers.ValidationError:
@@ -164,6 +171,7 @@ class SubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Submission
         fields = '__all__'
+
 
 class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
