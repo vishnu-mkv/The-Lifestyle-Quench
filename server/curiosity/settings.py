@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 
-DEBUG = False
+DEBUG = True
 
 if DEBUG:
     from .secrets import *
@@ -28,7 +28,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = DJANGO_SECRET_KEY if DEBUG else os.environ.get('DJANGO_SECRET_KEY')
+SECRET_KEY = DJANGO_SECRET_KEY if DEBUG else os.environ.get(
+    'DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
@@ -179,8 +180,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_ROOT = Path.joinpath(BASE_DIR, 'static/')
+if DEBUG:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static/'),
+    ]
+else:
+    STATIC_ROOT = Path.joinpath(BASE_DIR, 'static/')
 STATIC_URL = '/static/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -253,39 +260,7 @@ CLEANER_CONFIG = {
     }
 }
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': ('%(asctime)s [%(process)d] [%(levelname)s] ' +
-                       'pathname=%(pathname)s lineno=%(lineno)s ' +
-                       'funcname=%(funcName)s %(message)s'),
-            'datefmt': '%Y-%m-%d %H:%M:%S'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        }
-    },
-    'handlers': {
-        'null': {
-            'level': 'DEBUG',
-            'class': 'logging.NullHandler',
-        },
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
-        }
-    },
-    'loggers': {
-        'testlogger': {
-            'handlers': ['console'],
-            'level': 'INFO',
-        }
-    }
-}
-
 # For debug
 # TOP_POST_SLUGS = ["what-is-so-awesome", "master-the-blaster", "What-is-what"]
-TOP_POST_SLUGS = ["theory-of-love-in-platos-symposium", "a-little-thing-called-love", "free-radical-theory-of-aging"]
+TOP_POST_SLUGS = ["theory-of-love-in-platos-symposium",
+                  "a-little-thing-called-love", "free-radical-theory-of-aging"]

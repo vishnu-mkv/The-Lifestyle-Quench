@@ -1,0 +1,109 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap");
+
+:root {
+    font-family: "Nunito", sans-serif;
+    font-size: 16px;
+    --white: #f8f8f8;
+    --black: #1a1a1a;
+}
+
+html,
+body {
+    padding: 0 1rem;
+    margin: 0;
+    color: var(--black);
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.url {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.url-text {
+    font-size: 1.12rem;
+    font-weight: 600;
+}
+
+.methods {
+    display: flex;
+    gap: 0.5em;
+}
+
+.methods > p {
+    padding: 0.1em 0.3em;
+    border-radius: 0.3em;
+    background-color: var(--black);
+    color: var(--white);
+    font-size: 0.82rem;
+    height: fit-content;
+    margin: 0;
+}
+
+.left {
+    display: flex;
+    gap: 2em;
+    align-items: center;
+}
+
+.right {
+    padding: 0.2em 0.3em;
+    border-radius: 0.3em;
+    display: flex;
+    gap: 0.2em;
+    align-items: center;
+}
+
+.right > p {
+    margin: 0;
+    font-size: 0.82rem;
+}
+
+.Public {
+    background-color: #7bff65;
+}
+
+.User {
+    background-color: #55d3ef;
+}
+
+.Writer {
+    background-color: #ce65ff;
+}
+
+.Staff {
+    background-color: #fff065;
+}
+
+.Admin {
+    background-color: #ff6565;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.desc {
+    margin: 0.2em 0;
+}
+
+.route {
+    border-bottom: 1px solid grey;
+    padding: 0.8em 0 1.1em;
+}
+
+@media screen and (max-width: 550px) {
+    .left {
+        flex-direction: column;
+        gap: 0.2em;
+        align-items: flex-start;
+    }
+
+    .desc {
+        margin: 0.8em 0 0;
+    }
+}

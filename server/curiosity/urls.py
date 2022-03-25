@@ -21,6 +21,7 @@ from django.urls import path, include
 
 from users.views import writer_profile_view, writer_application_list_review_view, writer_application_review_view, \
     writer_name_availability_view, email_availability_view
+from .views import home_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -39,6 +40,7 @@ urlpatterns = [
          name='writer-apply-not-reviewed'),
     path('staff/review/<w_id>/', writer_application_review_view,
          name='writer-apply-review'),
+    path('', home_view, name='home'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += staticfiles_urlpatterns()
