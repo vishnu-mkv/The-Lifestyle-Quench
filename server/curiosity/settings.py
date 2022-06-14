@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 
-DEBUG = False
+DEBUG = True
 
 if DEBUG:
     from .secrets import *
@@ -185,7 +185,7 @@ if DEBUG:
         os.path.join(BASE_DIR, 'static/'),
     ]
 else:
-    STATIC_ROOT = Path.joinpath(BASE_DIR, 'static/')
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 
@@ -195,7 +195,7 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # For media
-MEDIA_ROOT = Path.joinpath(BASE_DIR, 'media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 # for email services
